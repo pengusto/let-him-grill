@@ -14,7 +14,7 @@ Six decisions evaluated · five resolved autonomously · one human gate. The
 ## Install
 
 ```bash
-npx skills add enis-uys/let-him-grill -g -a codex -y
+npx skills add pengusto/let-him-grill -g -a codex -y
 ```
 
 Start a new Codex task after installation, then invoke `$let-him-grill`.
@@ -48,7 +48,7 @@ Available in every Codex project for the current user:
 
 ```bash
 mkdir -p ~/.agents/skills
-git clone https://github.com/enis-uys/let-him-grill.git \
+git clone https://github.com/pengusto/let-him-grill.git \
   ~/.agents/skills/let-him-grill
 ```
 
@@ -56,7 +56,7 @@ PowerShell:
 
 ```powershell
 New-Item -ItemType Directory -Force "$HOME\.agents\skills" | Out-Null
-git clone https://github.com/enis-uys/let-him-grill.git `
+git clone https://github.com/pengusto/let-him-grill.git `
   "$HOME\.agents\skills\let-him-grill"
 ```
 
@@ -66,7 +66,7 @@ Version the skill with one repository:
 
 ```bash
 mkdir -p .agents/skills
-git submodule add https://github.com/enis-uys/let-him-grill.git \
+git submodule add https://github.com/pengusto/let-him-grill.git \
   .agents/skills/let-him-grill
 ```
 

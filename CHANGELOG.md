@@ -4,6 +4,11 @@ All notable user-facing changes to Let Him Grill are recorded here.
 
 ## [Unreleased]
 
+### Changed
+
+- Updated GitHub repository and installation references for the new `pengusto`
+  account name.
+
 ### Added
 
 - Excalidraw-style workflow overview covering decision triage, human gates, and

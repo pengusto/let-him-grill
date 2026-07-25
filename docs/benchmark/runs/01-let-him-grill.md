@@ -36,7 +36,7 @@ Resolved path:
    1. Confirm clean tree and reviewed diff.
    2. Run `python3 scripts/test_decision_state.py`.
    3. Validate skill discovery/frontmatter with `gh skill publish --dry-run`.
-   4. From a temporary directory, run `npx skills add enis-uys/let-him-grill --list`.
+   4. From a temporary directory, run `npx skills add pengusto/let-him-grill --list`.
    5. Install candidate into an isolated temporary agent directory; confirm `SKILL.md`, scripts, examples, and `$let-him-grill` discovery.
    6. Run one compact-mode smoke scenario and one visual-mode smoke scenario.
    7. Confirm candidate SHA equals pushed `origin/main`.
@@ -67,7 +67,7 @@ Resolved path:
 6. Distribution proof, after publication:
 
    - Fresh temporary install using documented command:
-     `npx skills add enis-uys/let-him-grill -g -a codex -y`
+     `npx skills add pengusto/let-him-grill -g -a codex -y`
    - Confirm installed source corresponds to tagged release contents.
    - Start fresh Codex task; invoke `$let-him-grill`; save concise smoke evidence.
    - Confirm skills.sh detail/search entry and source link. An install can supply anonymous telemetry used by skills.sh discovery/ranking; page appearance may lag caching. [skills.sh documentation](https://www.skills.sh/docs)

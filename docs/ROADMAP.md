@@ -28,7 +28,7 @@ change.
 - [x] Put the one-line Codex install command near the top of the README:
 
   ```bash
-  npx skills add enis-uys/let-him-grill -g -a codex -y
+  npx skills add pengusto/let-him-grill -g -a codex -y
   ```
 
 - [x] Keep the Git installation as a fallback.

@@ -165,7 +165,7 @@ Nächste Frage: Wann gilt Distribution als bewiesen?
 
 Empfehlung: erst wenn alle drei Nachweise vorliegen:
 
-1. Clean-room-Codex-Install über `npx skills add enis-uys/let-him-grill -g -a codex -y` erfolgreich.
+1. Clean-room-Codex-Install über `npx skills add pengusto/let-him-grill -g -a codex -y` erfolgreich.
 2. skills.sh-Detailseite existiert und zeigt `let-him-grill`.
 3. Automatische Security-Audits enthalten keinen `fail`; `warn` wird manuell bewertet.
 
@@ -410,7 +410,7 @@ skills.sh installiert direkt aus dem GitHub-Repository. Der Tag dokumentiert dah
    - Genau dieser Lauf darf Telemetrie senden:
 
    ```bash
-   npx skills add enis-uys/let-him-grill -g -a codex -y
+   npx skills add pengusto/let-him-grill -g -a codex -y
    ```
 
    - Danach keine weiteren telemetrieaktiven Proof-Installationen.
