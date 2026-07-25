@@ -6,7 +6,7 @@ judgment materially changes the outcome.
 
 ## Demo
 
-![Let Him Grill resolves reversible choices, stops at a human gate, then invalidates and reassesses a dependent branch after an earlier choice changes.](docs/demo.gif)
+![Let Him Grill resolves reversible choices, stops at a human gate, then invalidates and reassesses a dependent branch after an earlier choice changes.](docs/demo.png)
 
 Six decisions evaluated · five resolved autonomously · one human gate. The
 [poster frame](docs/demo-poster.png) provides a static alternative.

@@ -9,10 +9,14 @@ All notable user-facing changes to Let Him Grill are recorded here.
 - Updated GitHub repository and installation references for the new `pengusto`
   account name.
 
+## [0.1.1] - 2026-07-26
+
 ### Added
 
 - Excalidraw-style workflow overview covering decision triage, human gates, and
   visual rendering in Codex.
+- Responsive GitHub Pages landing page with a focused pixel-grill identity,
+  benchmark proof, demo, workflow, and one-command installation.
 
 ### Changed
 
@@ -20,6 +24,8 @@ All notable user-facing changes to Let Him Grill are recorded here.
   product questions with the decisions implemented in `v0.1.0`.
 - Added a confirmed handoff before implementation, including a concise decision
   summary and reuse of existing canonical project documentation.
+- Cropped and lightly rounded the demo animation and poster to remove the
+  captured white browser background on GitHub and the project landing page.
 
 ## [0.1.0] - 2026-07-24
 

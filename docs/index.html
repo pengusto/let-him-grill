@@ -1,0 +1,478 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Let Him Grill resolves reversible planning decisions autonomously and stops only when human judgment matters.">
+  <meta property="og:title" content="Let Him Grill">
+  <meta property="og:description" content="Let the agent cook. Grill only what matters.">
+  <meta property="og:image" content="social-preview.png">
+  <meta name="theme-color" content="#090a0b">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23090a0b'/%3E%3Cpath d='M8 7h16v4H8zm2 6h12l-2 12h-8z' fill='%23ff9d2e'/%3E%3C/svg%3E">
+  <title>Let Him Grill — Autonomous decisions for Codex</title>
+  <style>
+    :root {
+      --coal: #090a0b;
+      --iron: #151719;
+      --iron-2: #202428;
+      --ash: #a8adb3;
+      --paper: #f5f7f8;
+      --ember: #ff9d2e;
+      --ember-hot: #ffd166;
+      --auto: #4ce8a2;
+      --signal: #438cf9;
+      --max: 1120px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      color: var(--paper);
+      background:
+        linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px),
+        var(--coal);
+      background-size: 24px 24px;
+      font-family: ui-monospace, "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      line-height: 1.6;
+    }
+
+    a { color: inherit; }
+
+    .shell {
+      width: min(calc(100% - 36px), var(--max));
+      margin-inline: auto;
+    }
+
+    .site-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 72px;
+      border-bottom: 1px solid var(--iron-2);
+    }
+
+    .brand {
+      color: var(--paper);
+      font-weight: 800;
+      letter-spacing: -.04em;
+      text-decoration: none;
+    }
+
+    .brand::before { content: "["; color: var(--ember); }
+    .brand::after { content: "]"; color: var(--ember); }
+
+    nav { display: flex; gap: 20px; }
+
+    nav a {
+      color: var(--ash);
+      font-size: .82rem;
+      text-decoration: none;
+    }
+
+    nav a:hover { color: var(--paper); }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: clamp(36px, 7vw, 88px);
+      align-items: center;
+      min-height: 610px;
+      padding: 80px 0;
+    }
+
+    .hero > *, .section-heading > *, .final-cta > * { min-width: 0; }
+
+    .eyebrow {
+      margin: 0 0 20px;
+      color: var(--auto);
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+    }
+
+    h1, h2, h3 { margin-top: 0; line-height: 1.05; }
+
+    h1 {
+      max-width: 760px;
+      margin-bottom: 24px;
+      font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+      font-size: clamp(4.2rem, 10vw, 8.2rem);
+      font-weight: 900;
+      letter-spacing: -.035em;
+      text-transform: uppercase;
+    }
+
+    h1 span { color: var(--ember); }
+
+    .lede {
+      max-width: 650px;
+      margin: 0 0 32px;
+      color: #c9cdd1;
+      font-family: system-ui, sans-serif;
+      font-size: clamp(1.05rem, 2vw, 1.3rem);
+    }
+
+    .install {
+      display: flex;
+      align-items: stretch;
+      width: 100%;
+      max-width: 690px;
+      border: 1px solid #3a3e42;
+      background: #101214;
+      box-shadow: 8px 8px 0 #000;
+    }
+
+    .install code {
+      flex: 1;
+      min-width: 0;
+      max-width: 100%;
+      overflow-x: auto;
+      padding: 16px 18px;
+      color: var(--paper);
+      white-space: nowrap;
+    }
+
+    button, .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 0;
+      border-left: 1px solid #3a3e42;
+      padding: 12px 18px;
+      color: #160d03;
+      background: var(--ember);
+      font: 800 .78rem/1 ui-monospace, monospace;
+      letter-spacing: .08em;
+      text-decoration: none;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    button:hover, .button:hover { background: var(--ember-hot); }
+    button:focus-visible, .button:focus-visible, a:focus-visible { outline: 3px solid var(--signal); outline-offset: 4px; }
+
+    .grill {
+      position: relative;
+      min-height: 370px;
+      border: 1px solid #34383c;
+      background:
+        repeating-linear-gradient(0deg, transparent 0 34px, rgba(255,255,255,.11) 35px 37px),
+        radial-gradient(circle at 70% 58%, rgba(255,157,46,.18), transparent 23%),
+        #101214;
+      box-shadow: 14px 14px 0 #000;
+    }
+
+    .grill::before {
+      content: "AGENT DECISION TREE / LIVE";
+      position: absolute;
+      top: 18px;
+      left: 20px;
+      color: var(--ash);
+      font-size: .72rem;
+      letter-spacing: .1em;
+    }
+
+    .decision-map {
+      position: absolute;
+      inset: 66px 18px 16px;
+      width: calc(100% - 36px);
+      height: calc(100% - 82px);
+    }
+
+    .decision-map .branch {
+      fill: none;
+      stroke: #50565b;
+      stroke-width: 3;
+      vector-effect: non-scaling-stroke;
+    }
+
+    .decision-map .chosen-path {
+      fill: none;
+      stroke: var(--auto);
+      stroke-width: 5;
+      vector-effect: non-scaling-stroke;
+    }
+
+    .decision-map .option {
+      fill: var(--iron);
+      stroke: #596067;
+      stroke-width: 2;
+      vector-effect: non-scaling-stroke;
+    }
+
+    .decision-map .option.chosen {
+      fill: rgba(76,232,162,.12);
+      stroke: var(--auto);
+      stroke-width: 4;
+    }
+
+    .decision-map .gate {
+      fill: rgba(255,157,46,.11);
+      stroke: var(--ember);
+      stroke-width: 4;
+      vector-effect: non-scaling-stroke;
+    }
+
+    .decision-map text {
+      fill: var(--ash);
+      font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+      font-size: 14px;
+      font-weight: 800;
+      text-anchor: middle;
+    }
+
+    .decision-map .picked { fill: var(--auto); }
+    .decision-map .gate-text { fill: var(--ember); font-size: 22px; }
+    .decision-map .caption { font-size: 10px; letter-spacing: .08em; }
+    .decision-map .ember-glow {
+      fill: var(--ember);
+      opacity: .16;
+    }
+
+    .proof {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-block: 1px solid var(--iron-2);
+    }
+
+    .proof article { padding: 32px 24px; }
+    .proof article + article { border-left: 1px solid var(--iron-2); }
+
+    .proof strong {
+      display: block;
+      color: var(--paper);
+      font-family: Impact, sans-serif;
+      font-size: clamp(2.4rem, 6vw, 4.5rem);
+      letter-spacing: -.025em;
+    }
+
+    .proof span { color: var(--ash); font-size: .78rem; }
+
+    .section { padding: 92px 0; border-bottom: 1px solid var(--iron-2); }
+
+    .section-heading {
+      display: grid;
+      grid-template-columns: .45fr 1fr;
+      gap: 32px;
+      margin-bottom: 42px;
+    }
+
+    .section-heading h2 {
+      font-family: Impact, sans-serif;
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      letter-spacing: -.02em;
+      text-transform: uppercase;
+    }
+
+    .section-heading p { max-width: 620px; margin: 0; color: var(--ash); font-family: system-ui, sans-serif; }
+
+    .demo-frame {
+      overflow: hidden;
+      border: 1px solid #34383c;
+      border-radius: 8px;
+      background: var(--iron);
+      box-shadow: 12px 12px 0 #000;
+    }
+
+    .demo-frame img { display: block; width: 100%; height: auto; }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--iron-2);
+      border: 1px solid var(--iron-2);
+    }
+
+    .step { min-height: 250px; padding: 30px; background: var(--coal); }
+
+    .step b { display: block; margin-bottom: 56px; color: var(--auto); font-size: .78rem; }
+    .step:last-child b { color: var(--ember); }
+    .step h3 { font-size: 1.25rem; }
+    .step p { margin: 0; color: var(--ash); font-family: system-ui, sans-serif; font-size: .95rem; }
+
+    .final-cta {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 36px;
+      align-items: center;
+      padding: 88px 0;
+    }
+
+    .final-cta h2 { margin-bottom: 10px; font-family: Impact, sans-serif; font-size: clamp(2.6rem, 7vw, 5.5rem); text-transform: uppercase; }
+    .final-cta p { margin: 0; color: var(--ash); }
+
+    footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 30px 0 48px;
+      color: #7e848a;
+      font-size: .72rem;
+    }
+
+    footer a:hover { color: var(--paper); }
+
+    @media (max-width: 760px) {
+      nav a:not(:last-child) { display: none; }
+      .hero { grid-template-columns: 1fr; min-height: auto; padding: 64px 0; }
+      h1 { font-size: clamp(3.2rem, 18vw, 5.5rem); }
+      .grill { min-height: 300px; }
+      .decision-map { inset: 62px 8px 12px; width: calc(100% - 16px); height: calc(100% - 74px); }
+      .proof, .steps { grid-template-columns: 1fr; }
+      .proof article + article { border-left: 0; border-top: 1px solid var(--iron-2); }
+      .section-heading, .final-cta { grid-template-columns: 1fr; }
+      .section { padding: 68px 0; }
+      .install { display: block; }
+      .install code { display: block; }
+      button { width: 100%; border-top: 1px solid #3a3e42; border-left: 0; }
+      footer { display: block; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header shell">
+    <a class="brand" href="#top">LET HIM GRILL</a>
+    <nav aria-label="Primary navigation">
+      <a href="#demo">Demo</a>
+      <a href="#workflow">How it works</a>
+      <a href="https://github.com/pengusto/let-him-grill">GitHub</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero shell">
+      <div>
+        <p class="eyebrow">Autonomous decision workflow for Codex</p>
+        <h1>Let the agent <span>cook.</span></h1>
+        <p class="lede">Let Him Grill resolves safe, reversible planning decisions on its own—and stops when your judgment actually changes the outcome.</p>
+        <div class="install" aria-label="Installation command">
+          <code id="install-command">npx skills add pengusto/let-him-grill -g -a codex -y</code>
+          <button type="button" data-copy="install-command">Copy</button>
+        </div>
+      </div>
+
+      <div class="grill">
+        <svg class="decision-map" viewBox="0 0 430 270" role="img" aria-labelledby="map-title map-desc">
+          <title id="map-title">The agent chooses a different branch at each decision</title>
+          <desc id="map-desc">Three decisions each offer three options. The agent selects option two, then option one, then option three before stopping at a human gate.</desc>
+
+          <g class="branch">
+            <path d="M10 135H38M38 55V215M38 55H62M38 135H62M38 215H62"/>
+            <path d="M98 135H126M126 55V215M126 55H150M126 135H150M126 215H150"/>
+            <path d="M186 55H214M214 55V215M214 55H238M214 135H238M214 215H238"/>
+            <path d="M274 215H306V135H342"/>
+          </g>
+
+          <path class="chosen-path" d="M10 135H62M98 135H126V55H150M186 55H214V215H238M274 215H306V135H342"/>
+
+          <g aria-label="Decision one: option two selected by the agent">
+            <text class="caption" x="80" y="16">DECISION 1</text>
+            <rect class="option" x="62" y="37" width="36" height="36"/>
+            <rect class="option chosen" x="62" y="117" width="36" height="36"/>
+            <rect class="option" x="62" y="197" width="36" height="36"/>
+            <text x="80" y="61">1</text><text class="picked" x="80" y="141">2</text><text x="80" y="221">3</text>
+          </g>
+
+          <g aria-label="Decision two: option one selected by the agent">
+            <text class="caption" x="168" y="16">DECISION 2</text>
+            <rect class="option chosen" x="150" y="37" width="36" height="36"/>
+            <rect class="option" x="150" y="117" width="36" height="36"/>
+            <rect class="option" x="150" y="197" width="36" height="36"/>
+            <text class="picked" x="168" y="61">1</text><text x="168" y="141">2</text><text x="168" y="221">3</text>
+          </g>
+
+          <g aria-label="Decision three: option three selected by the agent">
+            <text class="caption" x="256" y="16">DECISION 3</text>
+            <rect class="option" x="238" y="37" width="36" height="36"/>
+            <rect class="option" x="238" y="117" width="36" height="36"/>
+            <rect class="option chosen" x="238" y="197" width="36" height="36"/>
+            <text x="256" y="61">1</text><text x="256" y="141">2</text><text class="picked" x="256" y="221">3</text>
+          </g>
+
+          <circle class="ember-glow" cx="370" cy="135" r="52"/>
+          <rect class="gate" x="342" y="107" width="56" height="56"/>
+          <text class="gate-text" x="370" y="143">?</text>
+          <text class="caption" x="370" y="188">HUMAN GATE</text>
+        </svg>
+      </div>
+    </section>
+
+    <section class="proof shell" aria-label="Benchmark results">
+      <article><strong>66 → 1</strong><span>individual questions across five paired runs</span></article>
+      <article><strong>455 → 54s</strong><span>median time to a usable plan</span></article>
+      <article><strong>0 services</strong><span>local state, standard library, native fallback</span></article>
+    </section>
+
+    <section class="section shell" id="demo">
+      <div class="section-heading">
+        <h2>See the grill.</h2>
+        <p>Six decisions evaluated. Five resolved autonomously. One human gate. Change an earlier choice and only its dependent path gets reassessed.</p>
+      </div>
+      <div class="demo-frame">
+        <img src="demo.png" alt="Let Him Grill evaluates decisions, pauses at a human gate, then invalidates and reassesses a dependent branch." width="1184" height="684">
+      </div>
+    </section>
+
+    <section class="section shell" id="workflow">
+      <div class="section-heading">
+        <h2>Grill only what matters.</h2>
+        <p>Same evidence-first discipline as Grill with Docs, with fewer interruptions and an explicit handoff before implementation.</p>
+      </div>
+      <div class="steps">
+        <article class="step">
+          <b>01 / INSPECT</b>
+          <h3>Read before asking</h3>
+          <p>Codex researches project code, documentation, terminology, and prior decisions first.</p>
+        </article>
+        <article class="step">
+          <b>02 / RESOLVE</b>
+          <h3>Keep moving</h3>
+          <p>Low-risk reversible choices get a reasoned recommendation and are resolved automatically.</p>
+        </article>
+        <article class="step">
+          <b>03 / STOP</b>
+          <h3>Your call when it matters</h3>
+          <p>Product intent, architecture, security, cost, and hard-to-reverse choices stay human.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="final-cta shell">
+      <div>
+        <h2>Ready to cook?</h2>
+        <p>Install globally, start a new Codex task, then invoke <code>$let-him-grill</code>.</p>
+      </div>
+      <a class="button" href="https://github.com/pengusto/let-him-grill#install">Install guide</a>
+    </section>
+  </main>
+
+  <footer class="shell">
+    <span>MIT · Built by Enis Uysal</span>
+    <span>Inspired by <a href="https://github.com/mattpocock/skills/tree/main/skills/engineering/grill-with-docs">Grill with Docs</a> · Independent project</span>
+  </footer>
+
+  <script>
+    document.querySelector('[data-copy]').addEventListener('click', async (event) => {
+      const button = event.currentTarget;
+      const command = document.getElementById(button.dataset.copy).textContent;
+      try {
+        await navigator.clipboard.writeText(command);
+        button.textContent = 'Copied';
+        setTimeout(() => { button.textContent = 'Copy'; }, 1600);
+      } catch {
+        window.prompt('Copy installation command:', command);
+      }
+    });
+  </script>
+</body>
+</html>

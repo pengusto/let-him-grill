@@ -41,7 +41,7 @@ numbers.
 
 ## Result
 
-The 18-second [demo](../demo.gif) and its [poster frame](../demo-poster.png)
+The 18-second [demo](../demo.png) and its [poster frame](../demo-poster.png)
 show the measured scenario 04 path: six decisions evaluated, five resolved
 autonomously, one human gate, then one dependent reassessment. Every frame is
 rendered from the canonical visual template tracked by
