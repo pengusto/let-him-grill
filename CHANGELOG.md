@@ -4,12 +4,23 @@ All notable user-facing changes to Let Him Grill are recorded here.
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-07-26
+
+### Added
+
+- Added a responsive GitHub Pages landing page with the benchmark, workflow,
+  installation command, and repository link.
+- Added six copy-ready examples for finance, software architecture, AI
+  training, game development, language training, and infrastructure security,
+  each with its own decision-tree screenshot.
+- Added a complete German README and language links between both versions.
+- Added an Excalidraw-style overview of decision triage, human gates, and visual
+  rendering in Codex.
+
 ### Changed
 
 - Added the GitHub mark to the landing-page repository link, with a compact
   icon-only treatment on narrow screens.
-- Added the six README prompt examples and their full decision-tree screenshots
-  to the GitHub Pages landing page.
 - Replaced the ambiguous `66 → 1` landing-page claim with the seven material
   human gates surfaced in the benchmark, and clarified that its question count
   measures prompt-dependent conversational interruptions rather than gates
@@ -36,23 +47,6 @@ All notable user-facing changes to Let Him Grill are recorded here.
 - Increased the red emphasis specifically for confidence below 70%.
 - Refreshed the before and reassessed screenshots for the current two-column
   decision interface.
-- Added copy-ready README examples for finance, software architecture, AI
-  training, game development, language training, and infrastructure security,
-  each with three representative decisions and its own screenshot.
-- Added a complete German README and language links between the English and
-  German versions.
-
-## [0.1.1] - 2026-07-26
-
-### Added
-
-- Excalidraw-style workflow overview covering decision triage, human gates, and
-  visual rendering in Codex.
-- Responsive GitHub Pages landing page with a focused pixel-grill identity,
-  benchmark proof, demo, workflow, and one-command installation.
-
-### Changed
-
 - Clarified the primary installation requirements and replaced obsolete open
   product questions with the decisions implemented in `v0.1.0`.
 - Added a confirmed handoff before implementation, including a concise decision
