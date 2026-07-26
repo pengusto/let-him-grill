@@ -48,6 +48,8 @@ def validate(state: dict) -> None:
     for node in state["nodes"]:
         if node.get("type") not in TYPES or node.get("status") not in STATUSES:
             raise SystemExit(f"Invalid type or status on node {node['id']}")
+        if node.get("context") is not None and (not isinstance(node["context"], str) or not node["context"].strip()):
+            raise SystemExit(f"Invalid context on node {node['id']}")
         if node.get("actor") not in {None, "ai", "human"}:
             raise SystemExit(f"Invalid actor on node {node['id']}")
         options = node.get("options", [])
@@ -158,6 +160,7 @@ def command_add(args: argparse.Namespace) -> None:
     node = {
         "id": args.id,
         "question": args.question,
+        "context": args.context,
         "type": args.type,
         "options": options,
         "choice": choice,
@@ -258,6 +261,7 @@ def command_export(args: argparse.Namespace) -> None:
                 f"- Type: `{node['type']}`",
                 f"- Status: `{node['status']}`",
                 f"- Choice: {option_label(node)}",
+                f"- Context: {node.get('context') or 'Open'}",
                 f"- Reason: {node.get('reason') or 'Open'}",
                 "",
             ]
@@ -280,6 +284,7 @@ def parser() -> argparse.ArgumentParser:
     add.add_argument("state")
     add.add_argument("--id", required=True)
     add.add_argument("--question", required=True)
+    add.add_argument("--context")
     add.add_argument("--type", choices=sorted(TYPES), required=True)
     add.add_argument("--option", action="append", type=parse_option, required=True)
     add.add_argument("--assessment", action="append", type=parse_assessment, required=True)

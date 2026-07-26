@@ -48,7 +48,8 @@ Python or another runtime without permission.
 2. Select the mode and backend. In `visual`, create `.grill/decisions.json` with
    the selected backend if no active state exists. In `compact`, keep the path
    in the conversation until persistence is useful.
-3. Build the next decision and 2–4 real options. Assess every option as
+3. Build the next decision with a concise question, enough context to explain
+   why it matters, and 2–4 real options. Assess every option as
    `recommended`, `solid-alternative`, `situational`, `not-recommended`, or
    `excluded`. Record a short reason, confidence, reversibility, effort, risk,
    downstream impact, and when the option becomes preferable.
@@ -127,6 +128,7 @@ python3 <skill-dir>/scripts/decision_state.py init \
 
 python3 <skill-dir>/scripts/decision_state.py add \
   .grill/decisions.json --id storage --question "How store state?" \
+  --context "The decision path must survive later Codex tasks and remain inspectable." \
   --type auto \
   --option local-json="Local JSON::Portable and easy to inspect" \
   --option sqlite="SQLite::Useful for larger queryable state" \
@@ -157,6 +159,7 @@ file tools for all operations:
    - `status`: `recommended`, `confirmed`, `pending`, `derived`, or `invalidated`
    - `actor`: `ai`, `human`, or `null`
    - option assessment `status`: absent, or `invalidated`
+   - node `context`: absent, or a non-empty string explaining why the question matters
 2. Before every write, read the complete current state and validate those exact
    value sets, unique node IDs, known dependencies, valid option IDs, one
    assessment per option, and no selected `excluded` or invalidated option. Use

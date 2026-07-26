@@ -8,6 +8,26 @@ All notable user-facing changes to Let Him Grill are recorded here.
 
 - Updated GitHub repository and installation references for the new `pengusto`
   account name.
+- Decision questions now use the same disclosure arrow as option details, and
+  each question accepts a custom answer that the bottom action sends to Codex
+  for refinement and application. Opening a custom answer selects it; choosing
+  a predefined option closes that question's custom field.
+- Option details now show color-coded confidence bands, risk, effort, and
+  reversibility as separate tags for faster comparison.
+- Expanded questions now separate decision context from the current assessment.
+- Pending selections now identify their question and answer, use a visible
+  `Pending change` tag, and send through the single bottom action. Long answers
+  use a two-column desktop and one-column narrow layout, confidence ranges have
+  a compact legend, and failed Codex delivery offers `Copy prompt`.
+- Stabilized the bottom selection bar and pending tag during text entry, and
+  kept the two-column answer layout at Codex's desktop inline width.
+- Reordered option colors by recommendation strength: green recommended, blue
+  solid alternative, orange situational, red not recommended, and gray excluded.
+- Made positive, informational, and warning colors stable instead of inheriting
+  host series colors that could render high confidence as red.
+- Increased the red emphasis specifically for confidence below 70%.
+- Refreshed the before and reassessed screenshots for the current two-column
+  decision interface.
 
 ## [0.1.1] - 2026-07-26
 

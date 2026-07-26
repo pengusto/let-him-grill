@@ -42,6 +42,7 @@ class DecisionStateTest(unittest.TestCase):
             self.run_cli("init", str(state), "--title", "Test")
             self.run_cli(
                 "add", str(state), "--id", "storage", "--question", "Storage?",
+                "--context", "State must remain inspectable across Codex tasks.",
                 "--type", "auto", "--option", "json=JSON", "--option", "cloud=Cloud",
                 "--assessment", self.assessment("json"),
                 "--assessment", self.assessment("cloud", "situational", "medium", False),
@@ -61,6 +62,7 @@ class DecisionStateTest(unittest.TestCase):
 
             nodes = {node["id"]: node for node in json.loads(state.read_text())["nodes"]}
             self.assertEqual(nodes["storage"]["choice"], "json")
+            self.assertEqual(nodes["storage"]["context"], "State must remain inspectable across Codex tasks.")
             self.assertEqual(nodes["storage"]["actor"], "ai")
             self.assertIsNone(nodes["provider"]["choice"])
             self.assertEqual(nodes["provider"]["status"], "pending")
@@ -68,7 +70,10 @@ class DecisionStateTest(unittest.TestCase):
 
             rendered = Path(directory) / "tree.html"
             self.run_cli("render", str(state), str(rendered))
-            self.assertIn("Blocked", rendered.read_text())
+            fragment = rendered.read_text()
+            self.assertIn("Blocked", fragment)
+            self.assertIn("State must remain inspectable across Codex tasks.", fragment)
+            self.assertIn('"Context"', fragment)
 
             ambiguous = subprocess.run(
                 [
@@ -195,11 +200,40 @@ class DecisionStateTest(unittest.TestCase):
             self.assertIn(f"const statePath = {json.dumps(str(state.resolve()))}", fragment)
             self.assertIn("await window.openai.sendFollowUpMessage({ prompt, title })", fragment)
             self.assertIn('sendToCodex(prompt, "Apply decision", "Decision sent to Codex.")', fragment)
+            self.assertIn('customChoice.type = "radio"', fragment)
+            self.assertIn('customChoice.checked = true', fragment)
+            self.assertIn('querySelector("[data-custom-answer]")?.removeAttribute("open")', fragment)
+            self.assertIn('selected = answer ? { node:node.id, custom:answer } : null', fragment)
+            self.assertIn('if (selected.custom)', fragment)
+            self.assertIn('sendToCodex(prompt, "Apply own answer", "Own answer sent to Codex.")', fragment)
+            self.assertIn('rewrite this custom answer as a concise, well-written decision statement', fragment)
+            self.assertIn('customInput.setAttribute("aria-label", `Own answer for: ${node.question}`)', fragment)
+            self.assertIn('optionMain.append(label, triage, pending)', fragment)
+            self.assertIn('data-apply disabled>Send to Codex</button>', fragment)
+            self.assertIn('.gwd-disclosure:hover .gwd-chevron', fragment)
+            self.assertNotIn('.gwd-disclosure:hover {', fragment)
+            self.assertIn('High confidence: 90–100%', fragment)
+            self.assertIn('Medium confidence: 70–89%', fragment)
+            self.assertIn('Low confidence: below 70%', fragment)
+            self.assertIn('gwd-metric gwd-confidence-low', fragment)
+            self.assertIn('var(--destructive, #ff6868) 34%', fragment)
+            self.assertIn('metric(`Risk ${assessment.risk}`', fragment)
+            self.assertIn('recommended:"var(--gwd-positive-color)"', fragment)
+            self.assertIn('"solid-alternative":"var(--gwd-info-color)"', fragment)
+            self.assertIn('situational:"var(--gwd-warning-color)"', fragment)
+            self.assertIn('--gwd-positive-color:#54d18b', fragment)
             self.assertIn('"Decision sent to Codex."', fragment)
-            self.assertEqual(
-                fragment.count('feedback.textContent = `Codex connection failed. Copy this prompt: ${prompt}`'),
-                2,
-            )
+            self.assertIn('Selected: ${node.question} → ${answer}', fragment)
+            self.assertIn('item.hidden = item !== target', fragment)
+            self.assertIn('grid-template-columns:repeat(2, minmax(0, 1fr))', fragment)
+            self.assertNotIn('@media (max-width:760px)', fragment)
+            self.assertIn('text-overflow:ellipsis', fragment)
+            self.assertIn('"Pending change"', fragment)
+            self.assertIn('High 90–100%', fragment)
+            self.assertIn('data-copy-prompt hidden>Copy prompt</button>', fragment)
+            self.assertEqual(fragment.count('feedback.textContent = "Codex connection failed."'), 2)
+            self.assertIn('await navigator.clipboard.writeText(fallbackPrompt)', fragment)
+            self.assertNotIn('Copy this prompt: ${prompt}', fragment)
             self.assertNotIn("data-reassess=", fragment)
 
     def test_render_uses_the_canonical_template_contract(self) -> None:
