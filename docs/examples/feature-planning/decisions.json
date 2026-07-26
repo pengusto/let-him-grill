@@ -1,0 +1,73 @@
+{
+  "version": 2,
+  "title": "Feature planning: saved filters",
+  "nodes": [
+    {
+      "id": "audience",
+      "question": "Who should receive saved filters first?",
+      "context": "The first audience determines onboarding, defaults, and delivery scope.",
+      "type": "review",
+      "options": [
+        {"id": "existing-users", "label": "Existing dashboard users", "assessment": {"triage": "recommended", "reason": "Existing usage provides the fastest feedback loop.", "confidence": 0.92, "reversible": true, "effort": "low", "risk": "low", "impact": "Keeps onboarding and migration small.", "preferredWhen": "The goal is fast validation with known users."}},
+        {"id": "new-users", "label": "New users", "assessment": {"triage": "solid-alternative", "reason": "A clean onboarding flow can teach the feature from the start.", "confidence": 0.82, "reversible": true, "effort": "medium", "risk": "medium", "impact": "Adds onboarding and empty-state work.", "preferredWhen": "Acquisition is more important than retention."}}
+      ],
+      "choice": "existing-users",
+      "reason": "Known users provide evidence with the smallest delivery surface.",
+      "confidence": 0.92,
+      "reversible": true,
+      "dependsOn": [],
+      "status": "recommended",
+      "actor": "ai"
+    },
+    {
+      "id": "delivery",
+      "question": "What is the smallest useful delivery slice?",
+      "context": "The first release should test repeated filter use without building a full sharing system.",
+      "type": "auto",
+      "options": [
+        {"id": "private-slice", "label": "Private save, rename, and delete", "assessment": {"triage": "recommended", "reason": "It tests the core repeat-use behavior without permissions.", "confidence": 0.95, "reversible": true, "effort": "low", "risk": "low", "impact": "Defers sharing and collaboration.", "preferredWhen": "Existing users need personal workflow speed."}},
+        {"id": "shared-library", "label": "Shared team library", "assessment": {"triage": "situational", "reason": "Sharing adds ownership and permission decisions too early.", "confidence": 0.88, "reversible": true, "effort": "high", "risk": "medium", "impact": "Creates collaboration and authorization scope.", "preferredWhen": "Team reuse is already proven as the primary need."}}
+      ],
+      "choice": "private-slice",
+      "reason": "One private vertical slice tests the feature promise safely.",
+      "confidence": 0.95,
+      "reversible": true,
+      "dependsOn": ["audience"],
+      "status": "recommended",
+      "actor": "ai"
+    },
+    {
+      "id": "documentation",
+      "question": "How should the first release be explained?",
+      "context": "Users need one discoverable explanation independent of rollout scope.",
+      "type": "auto",
+      "options": [
+        {"id": "inline-help", "label": "Inline help plus one README example", "assessment": {"triage": "recommended", "reason": "It explains the workflow at the point of use.", "confidence": 0.93, "reversible": true, "effort": "low", "risk": "low", "impact": "Adds a small maintained example.", "preferredWhen": "The interaction is simple and self-contained."}}
+      ],
+      "choice": "inline-help",
+      "reason": "The smallest durable explanation is sufficient.",
+      "confidence": 0.93,
+      "reversible": true,
+      "dependsOn": [],
+      "status": "recommended",
+      "actor": "ai"
+    },
+    {
+      "id": "scope-gate",
+      "question": "Should shared team filters be part of the first public release?",
+      "context": "Sharing changes permissions, ownership, migration, and the public product promise.",
+      "type": "human",
+      "options": [
+        {"id": "private-first", "label": "Release private filters first", "assessment": {"triage": "recommended", "reason": "It validates repeat use before adding collaboration.", "confidence": 0.9, "reversible": true, "effort": "low", "risk": "low", "impact": "Team sharing remains a follow-up.", "preferredWhen": "Fast evidence matters more than breadth."}},
+        {"id": "include-sharing", "label": "Include team sharing", "assessment": {"triage": "solid-alternative", "reason": "It delivers broader value but creates permission scope.", "confidence": 0.78, "reversible": false, "effort": "high", "risk": "medium", "impact": "Adds ownership, roles, and migration obligations.", "preferredWhen": "Team collaboration is a committed launch requirement."}}
+      ],
+      "choice": null,
+      "reason": null,
+      "confidence": null,
+      "reversible": false,
+      "dependsOn": ["audience", "delivery"],
+      "status": "pending",
+      "actor": null
+    }
+  ]
+}

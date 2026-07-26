@@ -11,6 +11,11 @@ All notable user-facing changes to Let Him Grill are recorded here.
   pixel-art workflow animation.
 - Added a read-only `resume` command and matching native-backend contract for
   deterministically continuing portable decision state in a later agent task.
+- Added repository-relative state references for public rendered decision-tree
+  examples.
+- Added three downloadable reference-artifact bundles for feature planning,
+  software architecture, and release readiness, each with portable state,
+  interactive tree, handoff, and reassessment guidance.
 
 ### Fixed
 

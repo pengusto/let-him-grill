@@ -325,10 +325,11 @@ def format_resume_status(summary: dict) -> str:
     return "\n".join(lines) + "\n"
 
 
-def render_html(state: dict, state_path: Path) -> str:
+def render_html(state: dict, state_path: Path, state_reference: str | None = None) -> str:
     template = TEMPLATE.read_text()
     state_json = json.dumps(state, ensure_ascii=False).replace("<", "\\u003c")
-    path_json = json.dumps(str(state_path.resolve()), ensure_ascii=False).replace("<", "\\u003c")
+    reference = state_reference or str(state_path.resolve())
+    path_json = json.dumps(reference, ensure_ascii=False).replace("<", "\\u003c")
     return template.replace("__LET_HIM_GRILL_STATE_JSON__", state_json).replace(
         "__LET_HIM_GRILL_STATE_PATH_JSON__", path_json
     )
@@ -339,7 +340,7 @@ def command_render(args: argparse.Namespace) -> None:
     state = load(state_path)
     output = Path(args.output)
     output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text(render_html(state, state_path))
+    output.write_text(render_html(state, state_path, args.state_reference))
 
 
 def command_export(args: argparse.Namespace) -> None:
@@ -403,6 +404,7 @@ def parser() -> argparse.ArgumentParser:
     render = commands.add_parser("render")
     render.add_argument("state")
     render.add_argument("output")
+    render.add_argument("--state-reference")
     render.set_defaults(function=command_render)
 
     export = commands.add_parser("export")

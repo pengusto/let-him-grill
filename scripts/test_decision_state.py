@@ -11,6 +11,7 @@ SCRIPT = Path(__file__).with_name("decision_state.py")
 ROOT = SCRIPT.parent.parent
 TEMPLATE = ROOT / "assets" / "decision-tree.html"
 SKILL = ROOT / "SKILL.md"
+REFERENCE_EXAMPLES = ROOT / "docs" / "examples"
 
 
 class DecisionStateTest(unittest.TestCase):
@@ -295,6 +296,18 @@ class DecisionStateTest(unittest.TestCase):
             self.assertIn(json.dumps(str(state.resolve())), fragment)
             self.assertNotIn("__LET_HIM_GRILL_", fragment)
 
+            portable = Path(directory) / "portable.html"
+            self.run_cli(
+                "render", str(state), str(portable),
+                "--state-reference", "docs/examples/example/decisions.json",
+            )
+            portable_fragment = portable.read_text()
+            self.assertIn(
+                'const statePath = "docs/examples/example/decisions.json"',
+                portable_fragment,
+            )
+            self.assertNotIn(str(state.resolve()), portable_fragment)
+
         skill = SKILL.read_text()
         self.assertIn("assets/decision-tree.html", skill)
         self.assertIn("__LET_HIM_GRILL_STATE_JSON__", skill)
@@ -404,6 +417,41 @@ class DecisionStateTest(unittest.TestCase):
             )
 
             self.assertIn('data-template="let-him-grill-v1"', output.read_text())
+
+    def test_reference_example_bundles_are_portable_and_reassess_only_descendants(self) -> None:
+        cases = {
+            "feature-planning": ("audience", "new-users", {"delivery", "scope-gate"}, "documentation", "inline-help"),
+            "software-architecture": ("boundary", "services", {"storage", "operations-gate"}, "decision-record", "adr"),
+            "release-readiness": ("rollout", "direct", {"rollback", "go-live-gate"}, "release-notes", "guide"),
+        }
+        for scenario, (node_id, option_id, invalidated, preserved_id, preserved_choice) in cases.items():
+            with self.subTest(scenario=scenario), tempfile.TemporaryDirectory() as directory:
+                bundle = REFERENCE_EXAMPLES / scenario
+                state = json.loads((bundle / "decisions.json").read_text())
+                self.assertGreaterEqual(
+                    sum(node["type"] in {"auto", "review"} for node in state["nodes"]),
+                    2,
+                )
+                self.assertTrue(any(
+                    node["type"] == "human" and node["status"] == "pending"
+                    for node in state["nodes"]
+                ))
+                for artifact in ("README.md", "prompt.md", "handoff.md", "reassessment.md", "tree.html"):
+                    self.assertTrue((bundle / artifact).is_file())
+                tree = (bundle / "tree.html").read_text()
+                reference = f"docs/examples/{scenario}/decisions.json"
+                self.assertIn(f"const statePath = {json.dumps(reference)}", tree)
+                self.assertNotIn(str(ROOT), tree)
+
+                copy = Path(directory) / "decisions.json"
+                shutil.copy2(bundle / "decisions.json", copy)
+                self.run_cli("choose", str(copy), node_id, option_id, "--actor", "human")
+                changed = {node["id"]: node for node in json.loads(copy.read_text())["nodes"]}
+                self.assertEqual(
+                    {node_id for node_id, node in changed.items() if node["status"] == "invalidated"},
+                    invalidated,
+                )
+                self.assertEqual(changed[preserved_id]["choice"], preserved_choice)
 
 
 if __name__ == "__main__":

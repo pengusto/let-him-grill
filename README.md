@@ -146,6 +146,15 @@ Codex chooses compact mode for short linear discussions and visual mode for
 branching or revisitable decisions. It states the selected mode once. You can
 switch modes at any time.
 
+### Downloadable reference artifacts
+
+Three complete bundles include the starting prompt, portable JSON state,
+interactive tree, Markdown handoff, and a documented branch reassessment:
+
+- [Feature planning](docs/examples/feature-planning/README.md)
+- [Software architecture](docs/examples/software-architecture/README.md)
+- [Release readiness](docs/examples/release-readiness/README.md)
+
 ### Example prompts
 
 #### Finance

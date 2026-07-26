@@ -353,6 +353,25 @@
       background: var(--iron-2);
     }
 
+    .artifact-links {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1px;
+      margin-bottom: 26px;
+      border: 1px solid var(--iron-2);
+      background: var(--iron-2);
+    }
+
+    .artifact-link {
+      padding: 22px;
+      background: var(--coal);
+    }
+
+    .artifact-link:hover { background: var(--iron); }
+    .artifact-link b { display: block; margin-bottom: 8px; }
+    .artifact-link a { color: var(--ember-hot); }
+    .artifact-link p { margin: 0; color: var(--ash); font-family: system-ui, sans-serif; font-size: .86rem; }
+
     .example {
       min-width: 0;
       padding: 28px;
@@ -426,7 +445,7 @@
       h1 { font-size: clamp(3.2rem, 18vw, 5.5rem); }
       .grill { min-height: 300px; }
       .decision-map { inset: 62px 8px 12px; width: calc(100% - 16px); height: calc(100% - 74px); }
-      .proof, .steps, .examples { grid-template-columns: 1fr; }
+      .proof, .steps, .examples, .artifact-links { grid-template-columns: 1fr; }
       .proof article + article { border-left: 0; border-top: 1px solid var(--iron-2); }
       .section-heading, .builder-bay, .final-cta { grid-template-columns: 1fr; }
       .section { padding: 68px 0; }
@@ -547,7 +566,21 @@
     <section class="section shell" id="examples">
       <div class="section-heading">
         <h2>Bring a real decision.</h2>
-        <p>Start with a concrete goal and name the boundaries that must stay human. These six prompts work across product, technical, and personal planning.</p>
+        <p>Inspect a complete portable artifact, or start with a prompt across product, technical, and personal planning.</p>
+      </div>
+      <div class="artifact-links" aria-label="Downloadable reference artifacts">
+        <article class="artifact-link">
+          <b><a href="examples/feature-planning/tree.html">Feature planning</a></b>
+          <p><a href="examples/feature-planning/prompt.md">Prompt</a> · <a href="examples/feature-planning/decisions.json">JSON</a> · <a href="examples/feature-planning/tree.html">Tree</a> · <a href="examples/feature-planning/handoff.md">Handoff</a> · <a href="examples/feature-planning/reassessment.md">Reassessment</a></p>
+        </article>
+        <article class="artifact-link">
+          <b><a href="examples/software-architecture/tree.html">Software architecture</a></b>
+          <p><a href="examples/software-architecture/prompt.md">Prompt</a> · <a href="examples/software-architecture/decisions.json">JSON</a> · <a href="examples/software-architecture/tree.html">Tree</a> · <a href="examples/software-architecture/handoff.md">Handoff</a> · <a href="examples/software-architecture/reassessment.md">Reassessment</a></p>
+        </article>
+        <article class="artifact-link">
+          <b><a href="examples/release-readiness/tree.html">Release readiness</a></b>
+          <p><a href="examples/release-readiness/prompt.md">Prompt</a> · <a href="examples/release-readiness/decisions.json">JSON</a> · <a href="examples/release-readiness/tree.html">Tree</a> · <a href="examples/release-readiness/handoff.md">Handoff</a> · <a href="examples/release-readiness/reassessment.md">Reassessment</a></p>
+        </article>
       </div>
       <div class="examples">
         <article class="example">

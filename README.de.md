@@ -156,6 +156,16 @@ Codex wählt den Kompaktmodus für kurze lineare Diskussionen und den visuellen
 Modus für verzweigte oder erneut betrachtete Entscheidungen. Der gewählte Modus
 wird einmal genannt. Ein Wechsel ist jederzeit möglich.
 
+### Herunterladbare Referenzartefakte
+
+Drei vollständige Bundles enthalten Startprompt, portablen JSON-Zustand,
+interaktiven Baum, Markdown-Handoff und eine dokumentierte Neubewertung eines
+Zweigs:
+
+- [Feature-Planung](docs/examples/feature-planning/README.md)
+- [Softwarearchitektur](docs/examples/software-architecture/README.md)
+- [Release-Bereitschaft](docs/examples/release-readiness/README.md)
+
 ### Beispiel-Prompts
 
 #### Finanzen

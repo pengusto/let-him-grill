@@ -94,7 +94,7 @@ Do not start launch work before steps 1–4 are reproducible.
 - [x] Prove clean Codex installation plus Claude Code package installation and
       resume-command behavior in
       [ticket 007](tickets/007-cross-agent-install-smoke-test.md).
-- [ ] Publish three complete reusable examples from
+- [x] Publish three complete reusable examples from
       [ticket 008](tickets/008-publish-reference-artifacts.md).
 - [ ] Reposition README and Pages around resumable decision state through
       [ticket 009](tickets/009-reposition-around-decision-state.md).

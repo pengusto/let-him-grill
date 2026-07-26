@@ -1,0 +1,364 @@
+<div id="grill-decision-tree" data-template="let-him-grill-v1">
+  <style>
+    #grill-decision-tree { --gwd-positive-color:#54d18b; --gwd-info-color:#62aef7; --gwd-warning-color:#ff9a52; display:grid; gap:16px; min-width:0; padding:16px; box-sizing:border-box; background:var(--background, #151515); color:var(--foreground, #f5f5f5); font-family:var(--font-sans, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif); }
+    #grill-decision-tree .gwd-summary { display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; padding-bottom:10px; border-bottom:1px solid var(--border, #3a3a3a); }
+    #grill-decision-tree .gwd-row { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+    #grill-decision-tree .gwd-muted { color:var(--muted-foreground, #a0a0a0); font-size:.875rem; }
+    #grill-decision-tree .gwd-tree { display:grid; }
+    #grill-decision-tree .gwd-node { display:grid; grid-template-columns:20px minmax(0, 1fr); gap:10px; min-width:0; }
+    #grill-decision-tree .gwd-marker { width:8px; height:8px; margin:17px 0 0 5px; border-radius:50%; background:var(--gwd-color); }
+    #grill-decision-tree .gwd-node:not(:last-child) .gwd-marker::after { content:""; display:block; width:1px; height:calc(100% + 28px); margin:8px 0 0 3px; background:var(--border, #3a3a3a); }
+    #grill-decision-tree .gwd-content { padding:10px 0 18px; min-width:0; border-bottom:1px solid var(--border, #3a3a3a); }
+    #grill-decision-tree .gwd-heading { display:grid; grid-template-columns:minmax(0, 1fr) auto; align-items:start; gap:8px; }
+    #grill-decision-tree details { min-width:0; }
+    #grill-decision-tree summary { cursor:pointer; list-style:none; }
+    #grill-decision-tree summary::-webkit-details-marker { display:none; }
+    #grill-decision-tree .gwd-disclosure { display:flex; align-items:center; gap:6px; width:max-content; max-width:100%; }
+    #grill-decision-tree .gwd-explanation { margin-top:8px; }
+    #grill-decision-tree .gwd-explanation p,
+    #grill-decision-tree .gwd-option-description p { margin:0 0 6px; }
+    #grill-decision-tree .gwd-status { display:inline-flex; align-items:center; gap:6px; color:var(--muted-foreground, #a0a0a0); white-space:nowrap; }
+    #grill-decision-tree .gwd-status-dot,
+    #grill-decision-tree .gwd-option-dot { width:7px; height:7px; border-radius:50%; background:var(--gwd-color); flex:none; }
+    #grill-decision-tree .gwd-options { display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:12px 18px; margin-top:12px; }
+    #grill-decision-tree .gwd-option { display:grid; grid-template-columns:auto minmax(0, 1fr) auto; align-items:center; gap:6px; min-width:0; }
+    #grill-decision-tree .gwd-option-main { display:grid; gap:4px; min-width:0; }
+    #grill-decision-tree .gwd-option-title { min-width:0; cursor:pointer; }
+    #grill-decision-tree .gwd-option-triage { display:inline-flex; align-items:center; gap:4px; width:max-content; max-width:100%; padding:2px 6px; border-radius:999px; color:var(--foreground, #f5f5f5); background:color-mix(in srgb, var(--gwd-option-color) 18%, transparent); font-size:.875rem; white-space:nowrap; }
+    #grill-decision-tree .gwd-option-dot { width:6px; height:6px; background:var(--gwd-option-color); }
+    #grill-decision-tree .gwd-metrics { display:flex; gap:6px; flex-wrap:wrap; margin:8px 0; }
+    #grill-decision-tree .gwd-metric { display:inline-flex; align-items:center; min-height:24px; padding:2px 7px; border-radius:999px; color:var(--foreground, #f5f5f5); font-size:.875rem; }
+    #grill-decision-tree .gwd-positive { background:color-mix(in srgb, var(--gwd-positive-color) 20%, transparent); }
+    #grill-decision-tree .gwd-warning { background:color-mix(in srgb, var(--gwd-warning-color) 20%, transparent); }
+    #grill-decision-tree .gwd-negative { background:color-mix(in srgb, var(--destructive, #ff6868) 20%, transparent); }
+    #grill-decision-tree .gwd-confidence-low { background:color-mix(in srgb, var(--destructive, #ff6868) 34%, transparent); }
+    #grill-decision-tree .gwd-confidence-legend { margin:0; padding-bottom:10px; border-bottom:1px solid var(--border, #3a3a3a); }
+    #grill-decision-tree .gwd-pending { display:inline-flex; width:max-content; padding:2px 6px; border-radius:999px; color:var(--foreground, #f5f5f5); background:color-mix(in srgb, var(--gwd-warning-color) 20%, transparent); font-size:.875rem; }
+    #grill-decision-tree .gwd-pending[hidden] { display:none; }
+    #grill-decision-tree .gwd-option-toggle { appearance:none; border:0; background:transparent; color:inherit; padding:0; font:inherit; cursor:pointer; }
+    #grill-decision-tree .gwd-button { appearance:none; border:0; border-radius:7px; background:transparent; color:inherit; padding:6px 9px; font:inherit; cursor:pointer; }
+    #grill-decision-tree .gwd-button:hover { background:var(--muted, #2b2b2b); }
+    #grill-decision-tree .gwd-disclosure:hover .gwd-chevron,
+    #grill-decision-tree .gwd-option-toggle:hover .gwd-chevron { background:var(--muted, #2b2b2b); }
+    #grill-decision-tree .gwd-button:focus-visible,
+    #grill-decision-tree .gwd-option-toggle:focus-visible,
+    #grill-decision-tree summary:focus-visible,
+    #grill-decision-tree input:focus-visible,
+    #grill-decision-tree textarea:focus-visible { outline:2px solid var(--ring, #62aef7); outline-offset:2px; }
+    #grill-decision-tree .gwd-primary { background:var(--primary, #e8e8e8); color:var(--primary-foreground, #171717); }
+    #grill-decision-tree .gwd-primary:hover { filter:brightness(.92); background:var(--primary, #e8e8e8); }
+    #grill-decision-tree button:disabled { cursor:not-allowed; opacity:.45; }
+    #grill-decision-tree .gwd-chevron { display:inline-grid; place-items:center; width:28px; height:28px; border-radius:7px; font-size:1.3em; transition:transform 120ms ease; }
+    #grill-decision-tree details[open] > summary .gwd-chevron,
+    #grill-decision-tree .gwd-option-toggle[aria-expanded="true"] .gwd-chevron { transform:rotate(90deg); }
+    #grill-decision-tree .gwd-option-description { grid-column:2 / -1; margin:2px 0 0; }
+    #grill-decision-tree .gwd-custom { margin-top:12px; }
+    #grill-decision-tree .gwd-custom-form { display:grid; gap:8px; margin:8px 0 0 24px; }
+    #grill-decision-tree textarea { width:100%; min-height:72px; resize:vertical; box-sizing:border-box; border:1px solid var(--input, #3a3a3a); border-radius:7px; padding:8px; background:var(--background, #151515); color:inherit; font:inherit; }
+    #grill-decision-tree .gwd-actions { display:grid; grid-template-columns:minmax(0, 1fr) auto auto auto; align-items:center; min-height:34px; }
+    #grill-decision-tree .gwd-actions [data-feedback] { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    @media (max-width:480px) {
+      #grill-decision-tree .gwd-node { grid-template-columns:18px minmax(0, 1fr); }
+      #grill-decision-tree .gwd-heading { grid-template-columns:1fr; }
+      #grill-decision-tree .gwd-options { grid-template-columns:1fr; }
+      #grill-decision-tree .gwd-actions { grid-template-columns:1fr auto; }
+      #grill-decision-tree .gwd-actions [data-feedback] { grid-column:1 / -1; }
+    }
+    @media (prefers-reduced-motion:reduce) {
+      #grill-decision-tree .gwd-chevron { transition:none; }
+    }
+  </style>
+  <div class="gwd-summary">
+    <strong data-title></strong>
+    <div class="gwd-row">
+      <span class="gwd-muted" data-count></span>
+      <button type="button" class="gwd-button" data-expand-all>Expand all</button>
+      <button type="button" class="gwd-button" data-collapse-all>Collapse all</button>
+    </div>
+  </div>
+  <div class="gwd-metrics gwd-confidence-legend" aria-label="Confidence ranges">
+    <span class="gwd-metric gwd-positive">High 90–100%</span>
+    <span class="gwd-metric gwd-warning">Medium 70–89%</span>
+    <span class="gwd-metric gwd-confidence-low">Low &lt;70%</span>
+  </div>
+  <div class="gwd-tree" data-tree></div>
+  <div class="gwd-row gwd-actions">
+    <span class="gwd-muted" data-feedback aria-live="polite"></span>
+    <button type="button" class="gwd-button" data-copy-prompt hidden>Copy prompt</button>
+    <span data-reassess-slot></span>
+    <button type="button" class="gwd-button gwd-primary" data-apply disabled>Send to Codex</button>
+  </div>
+  <script>
+    (() => {
+      const state = {"version": 2, "title": "Software architecture: event intake service", "nodes": [{"id": "boundary", "question": "What initial system boundary fits the observed load?", "context": "The team owns one product and has no independent scaling evidence yet.", "type": "review", "options": [{"id": "modular-monolith", "label": "Modular monolith", "assessment": {"triage": "recommended", "reason": "One deployable keeps operations small while preserving module seams.", "confidence": 0.91, "reversible": true, "effort": "low", "risk": "low", "impact": "Scaling remains coordinated initially.", "preferredWhen": "One team owns the product and load is unproven."}}, {"id": "services", "label": "Separate ingestion and query services", "assessment": {"triage": "solid-alternative", "reason": "Independent scaling may help once load shapes diverge.", "confidence": 0.8, "reversible": false, "effort": "high", "risk": "medium", "impact": "Adds network, deployment, and observability boundaries.", "preferredWhen": "Independent scaling or ownership is already required."}}], "choice": "modular-monolith", "reason": "Current evidence supports one deployable with explicit modules.", "confidence": 0.91, "reversible": true, "dependsOn": [], "status": "recommended", "actor": "ai"}, {"id": "storage", "question": "Where should accepted events be stored first?", "context": "The initial system needs transactions and ordinary operational queries.", "type": "auto", "options": [{"id": "postgres", "label": "PostgreSQL", "assessment": {"triage": "recommended", "reason": "Transactions and familiar operations cover current needs.", "confidence": 0.94, "reversible": true, "effort": "low", "risk": "low", "impact": "Keeps one operational datastore.", "preferredWhen": "Volume fits ordinary relational operations."}}, {"id": "event-platform", "label": "Dedicated event platform", "assessment": {"triage": "situational", "reason": "It adds infrastructure before retention and throughput demand it.", "confidence": 0.84, "reversible": true, "effort": "high", "risk": "medium", "impact": "Adds another operated distributed system.", "preferredWhen": "Replay scale or independent consumers are proven requirements."}}], "choice": "postgres", "reason": "One relational store satisfies the current operational contract.", "confidence": 0.94, "reversible": true, "dependsOn": ["boundary"], "status": "recommended", "actor": "ai"}, {"id": "decision-record", "question": "How should the architecture choice be recorded?", "context": "Future maintainers need the evidence and extraction trigger.", "type": "auto", "options": [{"id": "adr", "label": "One ADR with extraction triggers", "assessment": {"triage": "recommended", "reason": "The choice is material and surprising without context.", "confidence": 0.92, "reversible": true, "effort": "low", "risk": "low", "impact": "Creates one maintained decision record.", "preferredWhen": "Architecture may be revisited as load changes."}}], "choice": "adr", "reason": "The trade-off meets the repository ADR threshold.", "confidence": 0.92, "reversible": true, "dependsOn": [], "status": "recommended", "actor": "ai"}, {"id": "operations-gate", "question": "Should the team accept a distributed-service operational boundary now?", "context": "Separate services create lasting deployment, failure, and on-call obligations.", "type": "human", "options": [{"id": "one-deployable", "label": "Keep one deployable", "assessment": {"triage": "recommended", "reason": "No current evidence justifies distributed operations.", "confidence": 0.9, "reversible": true, "effort": "low", "risk": "low", "impact": "Defers independent scaling.", "preferredWhen": "The same team owns all modules."}}, {"id": "accept-services", "label": "Accept separate services", "assessment": {"triage": "solid-alternative", "reason": "It enables independent scaling at an ongoing operating cost.", "confidence": 0.79, "reversible": false, "effort": "high", "risk": "high", "impact": "Commits the team to distributed operations.", "preferredWhen": "Ownership or scaling boundaries are already material."}}], "choice": null, "reason": null, "confidence": null, "reversible": false, "dependsOn": ["boundary", "storage"], "status": "pending", "actor": null}]};
+      const statePath = "docs/examples/software-architecture/decisions.json";
+      const root = document.getElementById("grill-decision-tree");
+      const tree = root.querySelector("[data-tree]");
+      const apply = root.querySelector("[data-apply]");
+      const feedback = root.querySelector("[data-feedback]");
+      const copyPrompt = root.querySelector("[data-copy-prompt]");
+      const statusLabels = { auto:"AI recommendation", review:"Review", human:"Decision required", derived:"Derived", blocked:"Blocked" };
+      const statusColors = { auto:"var(--viz-series-1, #62aef7)", review:"var(--viz-series-2, #ff9a52)", human:"var(--destructive, #ff6868)", derived:"var(--muted-foreground, #a0a0a0)", blocked:"var(--destructive, #ff6868)" };
+      const triageLabels = { recommended:"Recommended", "solid-alternative":"Solid alternative", situational:"Situational", "not-recommended":"Not recommended", excluded:"Excluded" };
+      const triageColors = { recommended:"var(--gwd-positive-color)", "solid-alternative":"var(--gwd-info-color)", situational:"var(--gwd-warning-color)", "not-recommended":"var(--destructive, #ff6868)", excluded:"var(--muted-foreground, #a0a0a0)" };
+      let selected = null;
+      let fallbackPrompt = "";
+
+      function element(tag, className, text) {
+        const node = document.createElement(tag);
+        if (className) node.className = className;
+        if (text !== undefined) node.textContent = text;
+        return node;
+      }
+      function choiceLabel(node) {
+        return node.options.find((option) => option.id === node.choice)?.label || "No selection yet";
+      }
+      function nodeStatusLabel(node) {
+        if (node.status === "invalidated") return "Needs reassessment";
+        if (node.status === "confirmed") return "Confirmed";
+        return statusLabels[node.type];
+      }
+      function metric(text, tone, title) {
+        const item = element("span", `gwd-metric gwd-${tone}`, text);
+        if (title) item.title = title;
+        return item;
+      }
+      function confidenceMetric(confidence) {
+        const percent = Math.round(confidence * 100);
+        if (percent >= 90) return metric(`Confidence ${percent}% · high`, "positive", "High confidence: 90–100%");
+        if (percent >= 70) return metric(`Confidence ${percent}% · medium`, "warning", "Medium confidence: 70–89%");
+        return metric(`Confidence ${percent}% · low`, "confidence-low", "Low confidence: below 70%");
+      }
+      function markPending(target) {
+        root.querySelectorAll("[data-pending]").forEach((item) => item.hidden = item !== target);
+      }
+      function showSelection(node, answer) {
+        copyPrompt.hidden = true;
+        fallbackPrompt = "";
+        feedback.textContent = `Selected: ${node.question} → ${answer}`;
+        feedback.title = feedback.textContent;
+      }
+      function renderOption(node, option) {
+        const assessment = option.assessment;
+        const invalidated = assessment.status === "invalidated";
+        const excluded = assessment.triage === "excluded";
+        const row = element("div", "gwd-option");
+        const input = element("input");
+        const controlId = `gwd-${node.id}-${option.id}`;
+        input.id = controlId;
+        input.type = "radio";
+        input.name = `gwd-${node.id}`;
+        input.dataset.node = node.id;
+        input.dataset.option = option.id;
+        input.setAttribute("aria-label", `Select option: ${option.label}`);
+        input.disabled = excluded || invalidated;
+        input.checked = option.id === node.choice;
+        const optionMain = element("div", "gwd-option-main");
+        const label = element("label", "gwd-option-title", option.label);
+        label.htmlFor = controlId;
+        const triage = element("span", "gwd-option-triage");
+        const optionDot = element("span", "gwd-option-dot");
+        optionDot.setAttribute("aria-hidden", "true");
+        optionDot.style.setProperty("--gwd-option-color", invalidated ? "var(--muted-foreground, #a0a0a0)" : triageColors[assessment.triage]);
+        triage.style.setProperty("--gwd-option-color", invalidated ? "var(--muted-foreground, #a0a0a0)" : triageColors[assessment.triage]);
+        triage.append(optionDot, invalidated ? "Needs reassessment" : triageLabels[assessment.triage]);
+        const pending = element("span", "gwd-pending", "Pending change");
+        pending.dataset.pending = "";
+        pending.hidden = true;
+        optionMain.append(label, triage, pending);
+        const descriptionId = `${controlId}-description`;
+        const toggle = element("button", "gwd-option-toggle");
+        toggle.type = "button";
+        toggle.dataset.optionToggle = "";
+        toggle.setAttribute("aria-expanded", "false");
+        toggle.setAttribute("aria-controls", descriptionId);
+        toggle.setAttribute("aria-label", `Show description for ${option.label}`);
+        const chevron = element("span", "gwd-chevron", "›");
+        chevron.setAttribute("aria-hidden", "true");
+        toggle.append(chevron);
+        const description = element("div", "gwd-option-description");
+        description.id = descriptionId;
+        description.dataset.optionDescription = "";
+        description.hidden = true;
+        const metrics = element("div", "gwd-metrics");
+        metrics.append(
+          confidenceMetric(assessment.confidence),
+          metric(`Risk ${assessment.risk}`, assessment.risk === "low" ? "positive" : assessment.risk === "medium" ? "warning" : "negative"),
+          metric(`Effort ${assessment.effort}`, assessment.effort === "low" ? "positive" : assessment.effort === "medium" ? "warning" : "negative"),
+          metric(assessment.reversible ? "Easy to reverse" : "Hard to reverse", assessment.reversible ? "positive" : "negative"),
+        );
+        description.append(
+          element("p", "", option.description || "No additional description."),
+          element("p", "", assessment.reason),
+          metrics,
+          element("p", "gwd-muted", `Impact: ${assessment.impact} · Prefer when: ${assessment.preferredWhen}`),
+        );
+        input.addEventListener("change", () => {
+          input.closest("[data-node-card]")?.querySelector("[data-custom-answer]")?.removeAttribute("open");
+          const changed = option.id !== node.choice;
+          selected = changed ? { node:node.id, option:option.id } : null;
+          apply.disabled = !selected;
+          markPending(changed ? pending : null);
+          feedback.textContent = changed ? "" : "No pending change.";
+          if (changed) showSelection(node, option.label);
+        });
+        toggle.addEventListener("click", () => {
+          const expanded = toggle.getAttribute("aria-expanded") !== "true";
+          toggle.setAttribute("aria-expanded", String(expanded));
+          description.hidden = !expanded;
+        });
+        row.append(input, optionMain, toggle, description);
+        return row;
+      }
+      function renderNode(node) {
+        const card = element("section", "gwd-node");
+        card.dataset.nodeCard = node.id;
+        card.style.setProperty("--gwd-color", node.status === "confirmed" ? "var(--viz-series-3, #54d18b)" : statusColors[node.type]);
+        const marker = element("div", "gwd-marker");
+        marker.setAttribute("aria-hidden", "true");
+        const content = element("div", "gwd-content");
+        const heading = element("div", "gwd-heading");
+        const details = element("details");
+        const summary = element("summary", "gwd-disclosure");
+        const questionChevron = element("span", "gwd-chevron", "›");
+        questionChevron.setAttribute("aria-hidden", "true");
+        summary.append(element("strong", "", node.question), questionChevron);
+        const explanation = element("div", "gwd-explanation");
+        const dependencies = node.dependsOn.length ? node.dependsOn.join(", ") : "none";
+        const confidence = node.confidence === null ? "Confidence: open" : `Confidence: ${Math.round(node.confidence * 100)}%`;
+        explanation.append(
+          element("strong", "", "Context"),
+          element("p", "", node.context || node.reason || "No additional context."),
+        );
+        if (node.context) explanation.append(
+          element("strong", "", "Current assessment"),
+          element("p", "", node.reason || "Assessment pending."),
+        );
+        explanation.append(
+          element("p", "gwd-muted", `Selection: ${choiceLabel(node)} · ${confidence} · ${node.reversible ? "easy to reverse" : "hard to reverse"} · Dependencies: ${dependencies}`),
+        );
+        details.append(summary, explanation);
+        const status = element("span", "gwd-status");
+        const statusDot = element("span", "gwd-status-dot");
+        statusDot.setAttribute("aria-hidden", "true");
+        status.append(statusDot, nodeStatusLabel(node));
+        heading.append(details, status);
+        const options = element("div", "gwd-options");
+        node.options.forEach((option) => options.append(renderOption(node, option)));
+        const custom = element("details", "gwd-custom");
+        custom.dataset.customAnswer = "";
+        const customSummary = element("summary", "gwd-disclosure");
+        const customChoice = element("input");
+        customChoice.type = "radio";
+        customChoice.name = `gwd-${node.id}`;
+        customChoice.setAttribute("aria-label", `Select own answer for: ${node.question}`);
+        const customChevron = element("span", "gwd-chevron", "›");
+        customChevron.setAttribute("aria-hidden", "true");
+        const customMain = element("span", "gwd-option-main");
+        const customPending = element("span", "gwd-pending", "Pending change");
+        customPending.dataset.pending = "";
+        customPending.hidden = true;
+        customMain.append(element("span", "", "Own answer"), customPending);
+        customSummary.append(customChoice, customMain, customChevron);
+        const customForm = element("div", "gwd-custom-form");
+        const customInput = element("textarea");
+        customInput.rows = 3;
+        customInput.placeholder = "Describe your preferred answer…";
+        customInput.setAttribute("aria-label", `Own answer for: ${node.question}`);
+        custom.addEventListener("toggle", () => {
+          if (!custom.open) return;
+          customChoice.checked = true;
+          const answer = customInput.value.trim();
+          selected = answer ? { node:node.id, custom:answer } : null;
+          apply.disabled = !selected;
+          markPending(answer ? customPending : null);
+          feedback.textContent = answer ? "" : "Enter your own answer.";
+          if (answer) showSelection(node, answer);
+        });
+        customInput.addEventListener("input", () => {
+          const answer = customInput.value.trim();
+          customChoice.checked = true;
+          selected = answer ? { node:node.id, custom:answer } : null;
+          apply.disabled = !selected;
+          markPending(answer ? customPending : null);
+          feedback.textContent = answer ? "" : "Enter your own answer.";
+          if (answer) showSelection(node, answer);
+        });
+        customForm.append(customInput);
+        custom.append(customSummary, customForm);
+        content.append(heading, options, custom);
+        card.append(marker, content);
+        return card;
+      }
+      async function sendToCodex(prompt, title, successMessage) {
+        copyPrompt.hidden = true;
+        fallbackPrompt = "";
+        if (window.openai?.sendFollowUpMessage) {
+          try {
+            const result = await window.openai.sendFollowUpMessage({ prompt, title });
+            if (result?.isError) throw new Error("Codex rejected the follow-up message.");
+            feedback.textContent = successMessage;
+          } catch {
+            fallbackPrompt = prompt;
+            copyPrompt.hidden = false;
+            feedback.textContent = "Codex connection failed.";
+          }
+        } else {
+          fallbackPrompt = prompt;
+          copyPrompt.hidden = false;
+          feedback.textContent = "Codex connection failed.";
+        }
+      }
+
+      copyPrompt.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(fallbackPrompt);
+          feedback.textContent = "Prompt copied.";
+        } catch {
+          feedback.textContent = "Could not copy prompt.";
+        }
+      });
+
+      root.querySelector("[data-title]").textContent = state.title || "Decision path";
+      const autonomous = state.nodes.filter((node) => node.type !== "human" && node.choice).length;
+      const humanGates = state.nodes.filter((node) => node.type === "human").length;
+      root.querySelector("[data-count]").textContent = `${state.nodes.length} decisions · ${autonomous} autonomous · ${humanGates} human ${humanGates === 1 ? "gate" : "gates"}`;
+      if (state.nodes.length) state.nodes.forEach((node) => tree.append(renderNode(node)));
+      else tree.append(element("p", "gwd-muted", "No decisions yet."));
+
+      const firstInvalidated = state.nodes.find((node) => node.status === "invalidated");
+      if (firstInvalidated) {
+        const reassess = element("button", "gwd-button", "Reassess path");
+        reassess.type = "button";
+        reassess.dataset.reassess = firstInvalidated.id;
+        reassess.addEventListener("click", async () => {
+          const prompt = `Use $let-him-grill. Reassess invalidated decision node ${firstInvalidated.id} and its invalidated descendants in ${statePath}, continue to the next human gate, and render the updated tree.`;
+          await sendToCodex(prompt, "Reassess path", "Reassessment sent to Codex.");
+        });
+        root.querySelector("[data-reassess-slot]").append(reassess);
+      }
+      root.querySelector("[data-expand-all]").addEventListener("click", () => {
+        root.querySelectorAll("details").forEach((details) => details.open = true);
+        root.querySelectorAll("[data-option-toggle]").forEach((toggle) => toggle.setAttribute("aria-expanded", "true"));
+        root.querySelectorAll("[data-option-description]").forEach((description) => description.hidden = false);
+      });
+      root.querySelector("[data-collapse-all]").addEventListener("click", () => {
+        root.querySelectorAll("details").forEach((details) => details.open = false);
+        root.querySelectorAll("[data-option-toggle]").forEach((toggle) => toggle.setAttribute("aria-expanded", "false"));
+        root.querySelectorAll("[data-option-description]").forEach((description) => description.hidden = true);
+      });
+      apply.addEventListener("click", async () => {
+        if (!selected) return;
+        const node = state.nodes.find((item) => item.id === selected.node);
+        if (selected.custom) {
+          const prompt = `Use $let-him-grill. For decision "${node.question}" (node ${node.id}), rewrite this custom answer as a concise, well-written decision statement without changing its meaning: "${selected.custom}". Apply it to ${statePath}, assess it consistently with the existing options, reassess invalidated descendants, continue to the next human gate, and render the updated tree.`;
+          await sendToCodex(prompt, "Apply own answer", "Own answer sent to Codex.");
+          return;
+        }
+        const option = node.options.find((item) => item.id === selected.option);
+        const prompt = `Use $let-him-grill. Apply decision "${node.question}" = "${option.label}" (node ${selected.node}, option ${selected.option}) to ${statePath}, reassess invalidated descendants, continue to the next human gate, and render the updated tree.`;
+        await sendToCodex(prompt, "Apply decision", "Decision sent to Codex.");
+      });
+    })();
+  </script>
+</div>

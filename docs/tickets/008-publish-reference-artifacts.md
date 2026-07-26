@@ -1,6 +1,6 @@
 # Publish three reference decision artifacts
 
-Status: Ready
+Status: Done
 
 Depends on: tickets 006 and 007
 

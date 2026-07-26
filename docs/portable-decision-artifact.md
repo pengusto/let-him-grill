@@ -56,5 +56,14 @@ python3 scripts/decision_state.py render \
   .grill/decisions.json /absolute/current-task/decision-tree.html
 ```
 
+For a versioned public example, provide a repository-relative reference so the
+generated HTML does not embed a private machine path:
+
+```bash
+python3 scripts/decision_state.py render \
+  docs/examples/example/decisions.json docs/examples/example/tree.html \
+  --state-reference docs/examples/example/decisions.json
+```
+
 The native backend applies the same priority and reporting rules directly to
 the validated JSON without invoking Python.

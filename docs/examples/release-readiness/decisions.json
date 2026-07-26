@@ -1,0 +1,73 @@
+{
+  "version": 2,
+  "title": "Release readiness: account export",
+  "nodes": [
+    {
+      "id": "rollout",
+      "question": "How should account export reach users?",
+      "context": "The feature handles personal data and needs observable production evidence.",
+      "type": "review",
+      "options": [
+        {"id": "staged", "label": "Staged rollout", "assessment": {"triage": "recommended", "reason": "A small cohort limits exposure while validating real exports.", "confidence": 0.93, "reversible": true, "effort": "medium", "risk": "low", "impact": "Requires cohort control and monitoring.", "preferredWhen": "Production behavior still needs validation."}},
+        {"id": "direct", "label": "Direct full rollout", "assessment": {"triage": "not-recommended", "reason": "It exposes every account before production evidence exists.", "confidence": 0.91, "reversible": false, "effort": "low", "risk": "high", "impact": "Maximizes privacy and support exposure.", "preferredWhen": "Equivalent production behavior is already proven."}}
+      ],
+      "choice": "staged",
+      "reason": "A controlled cohort provides evidence with bounded exposure.",
+      "confidence": 0.93,
+      "reversible": true,
+      "dependsOn": [],
+      "status": "recommended",
+      "actor": "ai"
+    },
+    {
+      "id": "rollback",
+      "question": "What rollback control is required?",
+      "context": "Export failures must be stopped without redeploying unrelated changes.",
+      "type": "auto",
+      "options": [
+        {"id": "flag", "label": "Server-side feature flag", "assessment": {"triage": "recommended", "reason": "It disables new exports quickly while preserving evidence.", "confidence": 0.96, "reversible": true, "effort": "low", "risk": "low", "impact": "Adds one temporary rollout control.", "preferredWhen": "A staged cohort is used."}},
+        {"id": "redeploy", "label": "Rollback by redeploy", "assessment": {"triage": "not-recommended", "reason": "It couples export rollback to the whole release.", "confidence": 0.9, "reversible": true, "effort": "medium", "risk": "medium", "impact": "Slows incident response.", "preferredWhen": "No runtime flag mechanism exists."}}
+      ],
+      "choice": "flag",
+      "reason": "A targeted kill switch matches the staged rollout.",
+      "confidence": 0.96,
+      "reversible": true,
+      "dependsOn": ["rollout"],
+      "status": "recommended",
+      "actor": "ai"
+    },
+    {
+      "id": "release-notes",
+      "question": "How should the user-facing change be documented?",
+      "context": "Users need to understand export contents and delivery timing.",
+      "type": "auto",
+      "options": [
+        {"id": "guide", "label": "Release note plus export guide", "assessment": {"triage": "recommended", "reason": "It explains both availability and data contents.", "confidence": 0.94, "reversible": true, "effort": "low", "risk": "low", "impact": "Adds two small maintained documents.", "preferredWhen": "The feature affects user data handling."}}
+      ],
+      "choice": "guide",
+      "reason": "Documentation is required regardless of rollout size.",
+      "confidence": 0.94,
+      "reversible": true,
+      "dependsOn": [],
+      "status": "recommended",
+      "actor": "ai"
+    },
+    {
+      "id": "go-live-gate",
+      "question": "Is the current privacy and operational evidence sufficient for public rollout?",
+      "context": "Public availability accepts residual data-exposure and support risk.",
+      "type": "human",
+      "options": [
+        {"id": "limited", "label": "Approve limited cohort", "assessment": {"triage": "recommended", "reason": "It gathers evidence while preserving a bounded rollback path.", "confidence": 0.88, "reversible": true, "effort": "medium", "risk": "medium", "impact": "Requires active monitoring and cohort support.", "preferredWhen": "Security review and restore tests have passed."}},
+        {"id": "defer", "label": "Defer rollout", "assessment": {"triage": "solid-alternative", "reason": "It avoids exposure until remaining evidence exists.", "confidence": 0.86, "reversible": true, "effort": "low", "risk": "low", "impact": "Delays user access.", "preferredWhen": "Privacy or rollback evidence remains incomplete."}}
+      ],
+      "choice": null,
+      "reason": null,
+      "confidence": null,
+      "reversible": false,
+      "dependsOn": ["rollout", "rollback"],
+      "status": "pending",
+      "actor": null
+    }
+  ]
+}

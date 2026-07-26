@@ -1,0 +1,73 @@
+{
+  "version": 2,
+  "title": "Software architecture: event intake service",
+  "nodes": [
+    {
+      "id": "boundary",
+      "question": "What initial system boundary fits the observed load?",
+      "context": "The team owns one product and has no independent scaling evidence yet.",
+      "type": "review",
+      "options": [
+        {"id": "modular-monolith", "label": "Modular monolith", "assessment": {"triage": "recommended", "reason": "One deployable keeps operations small while preserving module seams.", "confidence": 0.91, "reversible": true, "effort": "low", "risk": "low", "impact": "Scaling remains coordinated initially.", "preferredWhen": "One team owns the product and load is unproven."}},
+        {"id": "services", "label": "Separate ingestion and query services", "assessment": {"triage": "solid-alternative", "reason": "Independent scaling may help once load shapes diverge.", "confidence": 0.8, "reversible": false, "effort": "high", "risk": "medium", "impact": "Adds network, deployment, and observability boundaries.", "preferredWhen": "Independent scaling or ownership is already required."}}
+      ],
+      "choice": "modular-monolith",
+      "reason": "Current evidence supports one deployable with explicit modules.",
+      "confidence": 0.91,
+      "reversible": true,
+      "dependsOn": [],
+      "status": "recommended",
+      "actor": "ai"
+    },
+    {
+      "id": "storage",
+      "question": "Where should accepted events be stored first?",
+      "context": "The initial system needs transactions and ordinary operational queries.",
+      "type": "auto",
+      "options": [
+        {"id": "postgres", "label": "PostgreSQL", "assessment": {"triage": "recommended", "reason": "Transactions and familiar operations cover current needs.", "confidence": 0.94, "reversible": true, "effort": "low", "risk": "low", "impact": "Keeps one operational datastore.", "preferredWhen": "Volume fits ordinary relational operations."}},
+        {"id": "event-platform", "label": "Dedicated event platform", "assessment": {"triage": "situational", "reason": "It adds infrastructure before retention and throughput demand it.", "confidence": 0.84, "reversible": true, "effort": "high", "risk": "medium", "impact": "Adds another operated distributed system.", "preferredWhen": "Replay scale or independent consumers are proven requirements."}}
+      ],
+      "choice": "postgres",
+      "reason": "One relational store satisfies the current operational contract.",
+      "confidence": 0.94,
+      "reversible": true,
+      "dependsOn": ["boundary"],
+      "status": "recommended",
+      "actor": "ai"
+    },
+    {
+      "id": "decision-record",
+      "question": "How should the architecture choice be recorded?",
+      "context": "Future maintainers need the evidence and extraction trigger.",
+      "type": "auto",
+      "options": [
+        {"id": "adr", "label": "One ADR with extraction triggers", "assessment": {"triage": "recommended", "reason": "The choice is material and surprising without context.", "confidence": 0.92, "reversible": true, "effort": "low", "risk": "low", "impact": "Creates one maintained decision record.", "preferredWhen": "Architecture may be revisited as load changes."}}
+      ],
+      "choice": "adr",
+      "reason": "The trade-off meets the repository ADR threshold.",
+      "confidence": 0.92,
+      "reversible": true,
+      "dependsOn": [],
+      "status": "recommended",
+      "actor": "ai"
+    },
+    {
+      "id": "operations-gate",
+      "question": "Should the team accept a distributed-service operational boundary now?",
+      "context": "Separate services create lasting deployment, failure, and on-call obligations.",
+      "type": "human",
+      "options": [
+        {"id": "one-deployable", "label": "Keep one deployable", "assessment": {"triage": "recommended", "reason": "No current evidence justifies distributed operations.", "confidence": 0.9, "reversible": true, "effort": "low", "risk": "low", "impact": "Defers independent scaling.", "preferredWhen": "The same team owns all modules."}},
+        {"id": "accept-services", "label": "Accept separate services", "assessment": {"triage": "solid-alternative", "reason": "It enables independent scaling at an ongoing operating cost.", "confidence": 0.79, "reversible": false, "effort": "high", "risk": "high", "impact": "Commits the team to distributed operations.", "preferredWhen": "Ownership or scaling boundaries are already material."}}
+      ],
+      "choice": null,
+      "reason": null,
+      "confidence": null,
+      "reversible": false,
+      "dependsOn": ["boundary", "storage"],
+      "status": "pending",
+      "actor": null
+    }
+  ]
+}
