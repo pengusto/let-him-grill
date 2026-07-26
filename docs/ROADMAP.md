@@ -91,7 +91,8 @@ Do not start launch work before steps 1–4 are reproducible.
 
 - [x] Define and verify the portable artifact contract in
       [ticket 006](tickets/006-portable-decision-artifact.md).
-- [ ] Prove clean Codex and Claude Code installation and resume behavior in
+- [x] Prove clean Codex installation plus Claude Code package installation and
+      resume-command behavior in
       [ticket 007](tickets/007-cross-agent-install-smoke-test.md).
 - [ ] Publish three complete reusable examples from
       [ticket 008](tickets/008-publish-reference-artifacts.md).
