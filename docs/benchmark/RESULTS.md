@@ -24,9 +24,13 @@ every question as a gate. Raw self-reported reassessment counts were 22 versus
 3, but the baseline count is not comparable: scenario 05 counted every answer
 as a reassessment.
 
-The defensible result is therefore limited to observed interruptions and time:
-across these five paired tasks, Let Him Grill reduced individual questions from
-66 to 1 and median time to a usable plan from 455 to 54 seconds.
+The question count is protocol-sensitive: the baseline prompt explicitly
+required one question at a time, while the Let Him Grill prompt explicitly
+allowed autonomous choices. It measures observed conversational interruptions,
+not human gates removed. Let Him Grill's final plans still surfaced seven
+normalized material human gates, although only one required an immediate answer.
+Across these five paired tasks, median time to a usable plan fell from 455 to 54
+seconds.
 
 Timing includes Codex execution and benchmark-controller response latency. All
 tasks used the configured default model, whose model ID was not exposed by the

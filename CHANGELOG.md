@@ -6,6 +6,10 @@ All notable user-facing changes to Let Him Grill are recorded here.
 
 ### Changed
 
+- Replaced the ambiguous `66 → 1` landing-page claim with the seven material
+  human gates surfaced in the benchmark, and clarified that its question count
+  measures prompt-dependent conversational interruptions rather than gates
+  removed.
 - Updated GitHub repository and installation references for the new `pengusto`
   account name.
 - Decision questions now use the same disclosure arrow as option details, and

@@ -23,8 +23,9 @@ Start a new Codex task after installation, then invoke `$let-him-grill`.
 
 ## Before and after
 
-In five paired planning runs, individual questions fell from 66 to 1 and median
-time to a usable plan from 455 to 54 seconds. See the
+In five scripted paired planning runs, median time to a usable plan fell from
+455 to 54 seconds. Let Him Grill's final plans surfaced seven normalized
+material human gates while asking one immediate question. See the
 [protocol, raw transcripts, and limitations](docs/benchmark/RESULTS.md).
 
 ## How it works

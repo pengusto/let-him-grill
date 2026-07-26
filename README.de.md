@@ -25,9 +25,11 @@ Starte nach der Installation einen neuen Codex-Task und rufe anschließend
 
 ## Vorher und nachher
 
-In fünf paarweisen Planungsdurchläufen sank die Zahl einzelner Fragen von 66
-auf 1 und die mediane Zeit bis zu einem nutzbaren Plan von 455 auf 54 Sekunden.
-Siehe [Protokoll, Rohtranskripte und Einschränkungen](docs/benchmark/RESULTS.md).
+In fünf skriptgesteuerten paarweisen Planungsdurchläufen sank die mediane Zeit
+bis zu einem nutzbaren Plan von 455 auf 54 Sekunden. Die finalen Pläne von Let
+Him Grill zeigten sieben normalisierte wesentliche menschliche
+Entscheidungspunkte und stellten eine unmittelbar zu beantwortende Frage. Siehe
+[Protokoll, Rohtranskripte und Einschränkungen](docs/benchmark/RESULTS.md).
 
 ## Funktionsweise
 
