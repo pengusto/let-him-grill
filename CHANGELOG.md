@@ -6,6 +6,8 @@ All notable user-facing changes to Let Him Grill are recorded here.
 
 ### Changed
 
+- Added the six README prompt examples and their full decision-tree screenshots
+  to the GitHub Pages landing page.
 - Replaced the ambiguous `66 → 1` landing-page claim with the seven material
   human gates surfaced in the benchmark, and clarified that its question count
   measures prompt-dependent conversational interruptions rather than gates
