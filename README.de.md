@@ -6,6 +6,12 @@ Eine autonome, evidenzbasierte Erweiterung des Grill-with-Docs-Workflows für
 Codex. Sie löst sichere, umkehrbare Entscheidungen selbstständig und stoppt,
 wenn menschliches Urteilsvermögen das Ergebnis wesentlich beeinflusst.
 
+<p align="center">
+  <img src="docs/molebyte-builder.gif" width="320" alt="Molebyte prüft, baut und vollendet in einer Pixel-Art-Animation einen leuchtenden Entscheidungsbaum.">
+</p>
+
+<p align="center"><strong>Molebyte baut die umkehrbaren Zweige. Die wichtigen Entscheidungen bleiben bei dir.</strong></p>
+
 ## Demo
 
 ![Let Him Grill löst umkehrbare Entscheidungen, stoppt an einem menschlichen Entscheidungspunkt und bewertet einen abhängigen Zweig neu, nachdem sich eine frühere Auswahl geändert hat.](docs/demo.png)

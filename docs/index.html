@@ -258,6 +258,52 @@
 
     .section { padding: 92px 0; border-bottom: 1px solid var(--iron-2); }
 
+    .builder-bay {
+      display: grid;
+      grid-template-columns: 1.3fr .7fr;
+      gap: clamp(28px, 5vw, 64px);
+      align-items: center;
+    }
+
+    .builder-visual {
+      overflow: hidden;
+      border: 1px solid #34383c;
+      background: var(--iron);
+      box-shadow: 12px 12px 0 #000;
+    }
+
+    .builder-visual img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .builder-copy h2 {
+      margin-bottom: 20px;
+      font-family: Impact, sans-serif;
+      font-size: clamp(2.6rem, 6vw, 5rem);
+      letter-spacing: -.02em;
+      text-transform: uppercase;
+    }
+
+    .builder-copy p:not(.eyebrow) {
+      margin: 0;
+      color: var(--ash);
+      font-family: system-ui, sans-serif;
+      font-size: 1rem;
+    }
+
+    .builder-code {
+      display: inline-block;
+      margin-top: 28px;
+      border: 1px solid #3a3e42;
+      padding: 9px 12px;
+      color: var(--ember-hot);
+      background: #101214;
+      font-size: .72rem;
+      letter-spacing: .08em;
+    }
+
     .section-heading {
       display: grid;
       grid-template-columns: .45fr 1fr;
@@ -347,14 +393,21 @@
 
     .final-cta {
       display: grid;
-      grid-template-columns: 1fr auto;
+      grid-template-columns: 1fr minmax(280px, 420px);
       gap: 36px;
       align-items: center;
       padding: 88px 0;
     }
 
     .final-cta h2 { margin-bottom: 10px; font-family: Impact, sans-serif; font-size: clamp(2.6rem, 7vw, 5.5rem); text-transform: uppercase; }
-    .final-cta p { margin: 0; color: var(--ash); }
+    .final-cta p { margin: 0 0 26px; color: var(--ash); }
+    .final-cta .button { border: 0; }
+
+    .builder-badge {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
 
     footer {
       display: flex;
@@ -375,12 +428,14 @@
       .decision-map { inset: 62px 8px 12px; width: calc(100% - 16px); height: calc(100% - 74px); }
       .proof, .steps, .examples { grid-template-columns: 1fr; }
       .proof article + article { border-left: 0; border-top: 1px solid var(--iron-2); }
-      .section-heading, .final-cta { grid-template-columns: 1fr; }
+      .section-heading, .builder-bay, .final-cta { grid-template-columns: 1fr; }
       .section { padding: 68px 0; }
+      .builder-copy { order: -1; }
       .install { display: block; }
       .install code { display: block; }
       button { width: 100%; border-top: 1px solid #3a3e42; border-left: 0; }
       .repo-link span { display: none; }
+      .builder-badge { max-width: 420px; }
       footer { display: block; }
     }
 
@@ -467,6 +522,18 @@
       <article><strong>0 services</strong><span>local state, standard library, native fallback</span></article>
     </section>
 
+    <section class="section shell builder-bay" aria-labelledby="builder-title">
+      <div class="builder-visual">
+        <img src="molebyte-builder.png" alt="Molebyte adjusts a glowing decision-tree branch at an ember-lit builder workbench." width="1200" height="800" loading="lazy">
+      </div>
+      <div class="builder-copy">
+        <p class="eyebrow">Meet the builder</p>
+        <h2 id="builder-title">Molebyte keeps the branches moving.</h2>
+        <p>Our project mascot works the safe, reversible paths and leaves the decisions with real consequences at the human gate.</p>
+        <span class="builder-code">INSPECT / BUILD / HAND OFF</span>
+      </div>
+    </section>
+
     <section class="section shell" id="demo">
       <div class="section-heading">
         <h2>See the grill.</h2>
@@ -550,8 +617,9 @@
       <div>
         <h2>Ready to cook?</h2>
         <p>Install globally, start a new Codex task, then invoke <code>$let-him-grill</code>.</p>
+        <a class="button" href="https://github.com/pengusto/let-him-grill#install">Install guide</a>
       </div>
-      <a class="button" href="https://github.com/pengusto/let-him-grill#install">Install guide</a>
+      <img class="builder-badge" src="molebyte-builder-badge.png" alt="Molebyte presents a completed glowing decision node." width="1000" height="500" loading="lazy">
     </section>
   </main>
 

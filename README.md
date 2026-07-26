@@ -6,6 +6,12 @@ An autonomous, evidence-first extension of the Grill with Docs workflow for
 Codex. It resolves safe, reversible decisions on its own and stops when human
 judgment materially changes the outcome.
 
+<p align="center">
+  <img src="docs/molebyte-builder.gif" width="320" alt="Molebyte studies, builds, and completes a glowing decision tree in a pixel-art animation.">
+</p>
+
+<p align="center"><strong>Molebyte builds the reversible branches. You keep the calls that matter.</strong></p>
+
 ## Demo
 
 ![Let Him Grill resolves reversible choices, stops at a human gate, then invalidates and reassesses a dependent branch after an earlier choice changes.](docs/demo.png)

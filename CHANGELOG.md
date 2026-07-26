@@ -4,6 +4,12 @@ All notable user-facing changes to Let Him Grill are recorded here.
 
 ## [Unreleased]
 
+### Added
+
+- Added Molebyte as the project mascot across the GitHub Pages builder section,
+  final call to action, and both README language versions, including a compact
+  pixel-art workflow animation.
+
 ## [0.2.1] - 2026-07-26
 
 ### Added
