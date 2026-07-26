@@ -4,6 +4,13 @@ All notable user-facing changes to Let Him Grill are recorded here.
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-07-26
+
+### Added
+
+- Added English-language imprint and privacy pages and linked them from the
+  GitHub Pages footer.
+
 ## [0.2.0] - 2026-07-26
 
 ### Added

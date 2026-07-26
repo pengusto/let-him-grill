@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Legal notice for Let Him Grill.">
+  <meta name="theme-color" content="#090a0b">
+  <title>Imprint — Let Him Grill</title>
+  <style>
+    :root {
+      --coal: #090a0b;
+      --iron-2: #202428;
+      --ash: #a8adb3;
+      --paper: #f5f7f8;
+      --ember: #ff9d2e;
+      --signal: #438cf9;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--paper);
+      background:
+        linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px),
+        var(--coal);
+      background-size: 24px 24px;
+      font-family: ui-monospace, "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      line-height: 1.6;
+    }
+
+    a { color: inherit; }
+    a:hover { color: var(--paper); }
+    a:focus-visible { outline: 3px solid var(--signal); outline-offset: 4px; }
+
+    .shell {
+      width: min(calc(100% - 36px), 760px);
+      margin-inline: auto;
+    }
+
+    header {
+      min-height: 72px;
+      border-bottom: 1px solid var(--iron-2);
+      display: flex;
+      align-items: center;
+    }
+
+    .brand {
+      color: var(--paper);
+      font-weight: 800;
+      letter-spacing: -.04em;
+      text-decoration: none;
+    }
+
+    .brand::before { content: "["; color: var(--ember); }
+    .brand::after { content: "]"; color: var(--ember); }
+
+    main { min-height: calc(100vh - 145px); padding: 80px 0; }
+
+    h1 {
+      margin: 0 0 36px;
+      font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+      font-size: clamp(3.2rem, 10vw, 6rem);
+      line-height: 1;
+      letter-spacing: -.035em;
+      text-transform: uppercase;
+    }
+
+    h1 span { color: var(--ember); }
+    h2 { margin: 32px 0 12px; font-size: 1rem; }
+    p { margin: 0 0 16px; color: var(--ash); }
+
+    footer {
+      border-top: 1px solid var(--iron-2);
+      padding: 24px 0;
+      color: #7e848a;
+      font-size: .72rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="shell"><a class="brand" href="index.html">LET HIM GRILL</a></div>
+  </header>
+
+  <main class="shell">
+    <h1>Impr<span>int.</span></h1>
+
+    <h2>Information pursuant to Section 5 DDG</h2>
+    <p>
+      Enis Uysal<br>
+      Beisingstraße 39<br>
+      45141 Essen
+    </p>
+
+    <h2>Contact</h2>
+    <p>Email: <a href="mailto:eniso.uysal@gmail.com">eniso.uysal@gmail.com</a></p>
+  </main>
+
+  <footer>
+    <div class="shell"><a href="index.html">Back to Let Him Grill</a> · <a href="privacy.html">Privacy</a></div>
+  </footer>
+</body>
+</html>
