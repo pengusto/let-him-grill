@@ -31,6 +31,8 @@ All notable user-facing changes to Let Him Grill are recorded here.
 - Added copy-ready README examples for finance, software architecture, AI
   training, game development, language training, and infrastructure security,
   each with three representative decisions and its own screenshot.
+- Added a complete German README and language links between the English and
+  German versions.
 
 ## [0.1.1] - 2026-07-26
 

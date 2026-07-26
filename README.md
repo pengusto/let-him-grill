@@ -1,5 +1,7 @@
 # Let Him Grill
 
+**English** · [Deutsch](README.de.md)
+
 An autonomous, evidence-first extension of the Grill with Docs workflow for
 Codex. It resolves safe, reversible decisions on its own and stops when human
 judgment materially changes the outcome.
