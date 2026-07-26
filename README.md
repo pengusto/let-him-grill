@@ -120,6 +120,21 @@ Python or another runtime.
 Codex announces `Visual mode · Python backend` or
 `Visual mode · Native Codex fallback` before the first decision.
 
+### Resume a decision artifact
+
+`.grill/decisions.json` is the portable source of truth. In a later task with
+Let Him Grill installed, ask the agent to resume that file. The Python backend
+can inspect the deterministic next action without changing state:
+
+```bash
+python3 <skill-dir>/scripts/decision_state.py resume .grill/decisions.json
+```
+
+Resume re-checks provisional AI choices against current repository evidence,
+reassesses contradicted or invalidated branches, and continues autonomously to
+the next human gate. HTML and Markdown exports are derived views and should be
+regenerated in the new workspace.
+
 ### Automatic mode selection
 
 ```text

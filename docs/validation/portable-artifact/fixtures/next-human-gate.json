@@ -1,0 +1,37 @@
+{
+  "version": 2,
+  "title": "Next human gate",
+  "nodes": [
+    {
+      "id": "storage",
+      "question": "Where should state live?",
+      "context": "State must remain inspectable across tasks.",
+      "type": "auto",
+      "options": [{"id": "json", "label": "Workspace JSON", "assessment": {"triage": "recommended", "reason": "It is portable and inspectable.", "confidence": 0.96, "reversible": true, "effort": "low", "risk": "low", "impact": "Keeps state local.", "preferredWhen": "One workspace owns the plan."}}],
+      "choice": "json",
+      "reason": "No service is required.",
+      "confidence": 0.96,
+      "reversible": true,
+      "dependsOn": [],
+      "status": "recommended",
+      "actor": "ai"
+    },
+    {
+      "id": "release",
+      "question": "Should this become the public release baseline?",
+      "context": "Publishing changes the supported product promise.",
+      "type": "human",
+      "options": [
+        {"id": "publish", "label": "Publish", "assessment": {"triage": "recommended", "reason": "Core validation is present.", "confidence": 0.82, "reversible": false, "effort": "medium", "risk": "medium", "impact": "Creates a public support baseline.", "preferredWhen": "The owner accepts the support commitment."}},
+        {"id": "defer", "label": "Defer", "assessment": {"triage": "solid-alternative", "reason": "Allows more external validation.", "confidence": 0.8, "reversible": true, "effort": "low", "risk": "low", "impact": "Delays public availability.", "preferredWhen": "More user evidence is required."}}
+      ],
+      "choice": null,
+      "reason": null,
+      "confidence": null,
+      "reversible": false,
+      "dependsOn": ["storage"],
+      "status": "pending",
+      "actor": null
+    }
+  ]
+}

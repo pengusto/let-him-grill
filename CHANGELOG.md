@@ -9,6 +9,13 @@ All notable user-facing changes to Let Him Grill are recorded here.
 - Added Molebyte as the project mascot across the GitHub Pages builder section,
   final call to action, and both README language versions, including a compact
   pixel-art workflow animation.
+- Added a read-only `resume` command and matching native-backend contract for
+  deterministically continuing portable decision state in a later agent task.
+
+### Fixed
+
+- Reject cyclic decision dependencies before rendering, exporting, resuming, or
+  changing state.
 
 ## [0.2.1] - 2026-07-26
 

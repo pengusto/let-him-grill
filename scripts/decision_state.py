@@ -85,6 +85,24 @@ def validate(state: dict) -> None:
         if confidence is not None and not 0 <= confidence <= 1:
             raise SystemExit(f"Confidence outside 0..1 on node {node['id']}")
 
+    dependencies = {node["id"]: set(node.get("dependsOn", [])) for node in state["nodes"]}
+    visiting: set[str] = set()
+    visited: set[str] = set()
+
+    def visit(node_id: str) -> None:
+        if node_id in visiting:
+            raise SystemExit("Invalid state: decision dependencies must not contain a cycle")
+        if node_id in visited:
+            return
+        visiting.add(node_id)
+        for dependency in dependencies[node_id]:
+            visit(dependency)
+        visiting.remove(node_id)
+        visited.add(node_id)
+
+    for node_id in dependencies:
+        visit(node_id)
+
 
 def parse_option(value: str) -> dict:
     option_id, separator, option_text = value.partition("=")
@@ -233,6 +251,80 @@ def option_label(node: dict, choice: str | None = None) -> str:
     )
 
 
+def resume_status(state: dict) -> dict:
+    invalidated_ids = {
+        node["id"] for node in state["nodes"] if node["status"] == "invalidated"
+    }
+    next_node = next(
+        (
+            node
+            for node in state["nodes"]
+            if node["status"] == "invalidated"
+            and not invalidated_ids.intersection(node.get("dependsOn", []))
+        ),
+        None,
+    )
+    action = "reassess" if next_node else None
+
+    if next_node is None:
+        next_node = next(
+            (
+                node
+                for node in state["nodes"]
+                if node["type"] == "blocked" and node["status"] != "invalidated"
+            ),
+            None,
+        )
+        action = "unblock" if next_node else None
+
+    if next_node is None:
+        next_node = next(
+            (node for node in state["nodes"] if node["status"] == "pending"),
+            None,
+        )
+        if next_node:
+            action = "human-gate" if next_node["type"] == "human" else "assess"
+
+    confirmed = [
+        f"{node['id']}={node['choice']}"
+        for node in state["nodes"]
+        if node["status"] == "confirmed" and node["actor"] == "human"
+    ]
+    provisional = [
+        f"{node['id']}={node['choice']}"
+        for node in state["nodes"]
+        if node["status"] == "recommended" and node["actor"] == "ai"
+    ]
+    return {
+        "title": state.get("title", "Decision path"),
+        "status": action or "complete",
+        "node": next_node and next_node["id"],
+        "question": next_node and next_node["question"],
+        "confirmedHumanChoices": confirmed,
+        "provisionalAiChoices": provisional,
+    }
+
+
+def format_resume_status(summary: dict) -> str:
+    confirmed = ", ".join(summary["confirmedHumanChoices"]) or "none"
+    provisional = ", ".join(summary["provisionalAiChoices"]) or "none"
+    lines = [
+        f"Resume status: {summary['status']}",
+        f"Confirmed human decisions: {confirmed}",
+        f"Provisional AI decisions: {provisional}",
+    ]
+    if summary["node"]:
+        lines.extend(
+            [
+                f"Next node: {summary['node']}",
+                f"Question: {summary['question']}",
+            ]
+        )
+    else:
+        lines.append("Next node: none")
+    return "\n".join(lines) + "\n"
+
+
 def render_html(state: dict, state_path: Path) -> str:
     template = TEMPLATE.read_text()
     state_json = json.dumps(state, ensure_ascii=False).replace("<", "\\u003c")
@@ -269,6 +361,11 @@ def command_export(args: argparse.Namespace) -> None:
     output = Path(args.output)
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text("\n".join(lines))
+
+
+def command_resume(args: argparse.Namespace) -> None:
+    state = load(Path(args.state))
+    sys.stdout.write(format_resume_status(resume_status(state)))
 
 
 def parser() -> argparse.ArgumentParser:
@@ -312,6 +409,10 @@ def parser() -> argparse.ArgumentParser:
     export.add_argument("state")
     export.add_argument("output")
     export.set_defaults(function=command_export)
+
+    resume = commands.add_parser("resume")
+    resume.add_argument("state")
+    resume.set_defaults(function=command_resume)
     return root
 
 

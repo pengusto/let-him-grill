@@ -48,6 +48,11 @@ Python or another runtime without permission.
 2. Select the mode and backend. In `visual`, create `.grill/decisions.json` with
    the selected backend if no active state exists. In `compact`, keep the path
    in the conversation until persistence is useful.
+   When resuming existing state, run `decision_state.py resume` with the Python
+   backend or apply the native resume procedure below. Re-check provisional AI
+   choices against current repository evidence. Keep them when the evidence
+   still supports them; invalidate and reassess only contradicted choices and
+   their descendants.
 3. Build the next decision with a concise question, enough context to explain
    why it matters, and 2–4 real options. Assess every option as
    `recommended`, `solid-alternative`, `situational`, `not-recommended`, or
@@ -143,6 +148,9 @@ python3 <skill-dir>/scripts/decision_state.py render \
 
 python3 <skill-dir>/scripts/decision_state.py export \
   .grill/decisions.json docs/decision-path.md
+
+python3 <skill-dir>/scripts/decision_state.py resume \
+  .grill/decisions.json
 ```
 
 Use `--depends-on <id>` once per dependency. Use `--replace` when rebuilding an
@@ -165,26 +173,36 @@ file tools for all operations:
    assessment per option, and no selected `excluded` or invalidated option. Use
    `examples/decisions.json` as the schema example. Stop instead of writing when
    any field uses an unknown value.
-3. For an `auto` node, select only when exactly one option is `recommended`,
+3. For resume, inspect state without changing it and select exactly one next
+   action using this priority:
+   - the first invalidated node that has no invalidated dependency: `reassess`
+   - otherwise the first non-invalidated `blocked` node: `unblock`
+   - otherwise the first `pending` node: `human-gate` for `human`, otherwise
+     `assess`
+   - otherwise: `complete`
+   Preserve node-array order when multiple nodes have the same priority. Report
+   confirmed human choices (`confirmed` plus actor `human`) and provisional AI
+   choices (`recommended` plus actor `ai`) with the selected action.
+4. For an `auto` node, select only when exactly one option is `recommended`,
    low-risk, and reversible. Otherwise promote the node to a human gate.
-4. When a choice changes, compute the full transitive descendant set from
+5. When a choice changes, compute the full transitive descendant set from
    `dependsOn`. Set every descendant's `choice` and `actor` to `null`, status to
    `invalidated`, reason to `Earlier dependency changed; reassessment required.`,
    confidence to `null`, and every option assessment status to `invalidated`.
-5. Apply the complete JSON update in one file edit. Never partially update state.
-6. Read `<skill-dir>/assets/decision-tree.html` completely. It is the canonical
+6. Apply the complete JSON update in one file edit. Never partially update state.
+7. Read `<skill-dir>/assets/decision-tree.html` completely. It is the canonical
    visual source; never recreate or restyle its HTML, CSS, or JavaScript.
-7. Serialize the complete validated state as JSON and escape every `<` as
+8. Serialize the complete validated state as JSON and escape every `<` as
    `\u003c`. Replace the template's single
    `__LET_HIM_GRILL_STATE_JSON__` placeholder with that JSON object.
-8. Encode the absolute state-file path as a JSON string, escape every `<` as
+9. Encode the absolute state-file path as a JSON string, escape every `<` as
    `\u003c`, and replace the single
    `__LET_HIM_GRILL_STATE_PATH_JSON__` placeholder with that string.
-9. Write the resulting self-contained fragment to the exact visualization
+10. Write the resulting self-contained fragment to the exact visualization
    directory assigned to the current Codex task. Never reuse a directory from
    another task or an earlier artifact. Confirm neither `__LET_HIM_GRILL_`
    placeholder remains; otherwise stop instead of presenting a broken view.
-10. Confirm the HTML file exists in the current task's visualization directory,
+11. Confirm the HTML file exists in the current task's visualization directory,
    embed it with `::codex-inline-vis{file="<rendered-filename>.html"}`, and inspect
    the result before presenting it. If inline visualization tools are
    unavailable, show the same decision content as compact text.
@@ -192,6 +210,8 @@ file tools for all operations:
 ## State rules
 
 - Treat `.grill/decisions.json` as source of truth; the visualization is a view.
+- Treat JSON as the portable artifact. Rendered HTML and Markdown are derived
+  views and may contain paths from the workspace that created them.
 - Never silently overwrite a confirmed human choice.
 - Reusing an invalidated recommendation requires fresh evidence.
 - Replace invalidated nodes with fresh option assessments; do not reuse stale

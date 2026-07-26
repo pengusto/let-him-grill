@@ -86,3 +86,20 @@ setup or documentation blockers.
       expansion.
 
 Do not start launch work before steps 1–4 are reproducible.
+
+## 7. Validate the portable decision artifact
+
+- [x] Define and verify the portable artifact contract in
+      [ticket 006](tickets/006-portable-decision-artifact.md).
+- [ ] Prove clean Codex and Claude Code installation and resume behavior in
+      [ticket 007](tickets/007-cross-agent-install-smoke-test.md).
+- [ ] Publish three complete reusable examples from
+      [ticket 008](tickets/008-publish-reference-artifacts.md).
+- [ ] Reposition README and Pages around resumable decision state through
+      [ticket 009](tickets/009-reposition-around-decision-state.md).
+- [ ] Run the privacy-preserving local validation funnel from
+      [ticket 010](tickets/010-local-launch-funnel.md).
+
+Done when external users can install the skill, complete a portable decision
+artifact, resume it in a new task, and the project has evidence about where that
+flow succeeds or fails.

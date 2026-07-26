@@ -1,0 +1,20 @@
+{
+  "version": 2,
+  "title": "Complete path",
+  "nodes": [
+    {
+      "id": "storage",
+      "question": "Where should state live?",
+      "context": "State must remain inspectable across tasks.",
+      "type": "auto",
+      "options": [{"id": "json", "label": "Workspace JSON", "assessment": {"triage": "recommended", "reason": "It is portable and inspectable.", "confidence": 0.96, "reversible": true, "effort": "low", "risk": "low", "impact": "Keeps state local.", "preferredWhen": "One workspace owns the plan."}}],
+      "choice": "json",
+      "reason": "No service is required.",
+      "confidence": 0.96,
+      "reversible": true,
+      "dependsOn": [],
+      "status": "recommended",
+      "actor": "ai"
+    }
+  ]
+}

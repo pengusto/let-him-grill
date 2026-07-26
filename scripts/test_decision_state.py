@@ -141,6 +141,38 @@ class DecisionStateTest(unittest.TestCase):
                     self.assertNotEqual(result.returncode, 0)
                     self.assertIn(message, result.stderr)
 
+    def test_rejects_cyclic_decision_dependencies(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            state = Path(directory) / "state.json"
+            assessment = json.loads(self.assessment("one").partition("=")[2])
+            node = {
+                "question": "Cycle?",
+                "type": "review",
+                "options": [{"id": "one", "label": "One", "assessment": assessment}],
+                "choice": "one",
+                "reason": "Test",
+                "confidence": 0.9,
+                "reversible": True,
+                "status": "recommended",
+                "actor": "ai",
+            }
+            state.write_text(json.dumps({
+                "version": 2,
+                "title": "Cycle",
+                "nodes": [
+                    node | {"id": "one", "dependsOn": ["two"]},
+                    node | {"id": "two", "dependsOn": ["one"]},
+                ],
+            }))
+
+            result = subprocess.run(
+                [sys.executable, str(SCRIPT), "resume", str(state)],
+                capture_output=True,
+                text=True,
+            )
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("must not contain a cycle", result.stderr)
+
     def test_change_invalidates_only_transitive_descendants(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             state = Path(directory) / "state.json"
@@ -276,6 +308,80 @@ class DecisionStateTest(unittest.TestCase):
         self.assertIn("Ask the user to confirm that summary", skill)
         self.assertIn("Do not implement the discussed plan", skill)
         self.assertIn("creating a duplicate", skill)
+        self.assertIn("decision_state.py resume", skill)
+        self.assertIn("the first invalidated node that has no invalidated dependency", skill)
+        self.assertIn("otherwise the first non-invalidated `blocked` node", skill)
+        self.assertIn("otherwise the first `pending` node", skill)
+
+    def test_resume_prioritizes_the_first_valid_invalidated_root(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            state = Path(directory) / "state.json"
+            self.run_cli("init", str(state), "--title", "Resume")
+            self.run_cli("add", str(state), "--id", "audience", "--question", "Audience?", "--type", "review", "--option", "dev=Developers", "--option", "team=Teams", "--assessment", self.assessment("dev"), "--assessment", self.assessment("team", "solid-alternative"), "--choice", "dev")
+            self.run_cli("choose", str(state), "audience", "dev")
+            self.run_cli("add", str(state), "--id", "storage", "--question", "Storage?", "--type", "review", "--option", "json=JSON", "--option", "sqlite=SQLite", "--assessment", self.assessment("json"), "--assessment", self.assessment("sqlite", "solid-alternative"), "--choice", "json", "--depends-on", "audience")
+            self.run_cli("add", str(state), "--id", "architecture", "--question", "Architecture?", "--type", "human", "--option", "skill=Skill", "--option", "plugin=Plugin", "--assessment", self.assessment("skill"), "--assessment", self.assessment("plugin", "solid-alternative"), "--depends-on", "storage")
+            self.run_cli("add", str(state), "--id", "release", "--question", "Release?", "--type", "human", "--option", "now=Now", "--option", "later=Later", "--assessment", self.assessment("now"), "--assessment", self.assessment("later", "solid-alternative"))
+            self.run_cli("choose", str(state), "audience", "team")
+
+            before = state.read_text()
+            result = subprocess.run(
+                [sys.executable, str(SCRIPT), "resume", str(state)],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+
+            self.assertEqual(state.read_text(), before)
+            self.assertIn("Resume status: reassess", result.stdout)
+            self.assertIn("Confirmed human decisions: audience", result.stdout)
+            self.assertIn("Next node: storage", result.stdout)
+            self.assertNotIn("Next node: architecture", result.stdout)
+
+    def test_resume_reports_blocked_then_pending_human_gate(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            state = Path(directory) / "state.json"
+            self.run_cli("init", str(state), "--title", "Resume")
+            self.run_cli("add", str(state), "--id", "storage", "--question", "Storage?", "--type", "auto", "--option", "json=JSON", "--assessment", self.assessment("json"))
+            self.run_cli("add", str(state), "--id", "release", "--question", "Release?", "--type", "human", "--option", "now=Now", "--option", "later=Later", "--assessment", self.assessment("now"), "--assessment", self.assessment("later", "solid-alternative"))
+            self.run_cli("add", str(state), "--id", "budget", "--question", "Budget?", "--type", "blocked", "--option", "known=Known", "--assessment", self.assessment("known", "situational"))
+
+            blocked = subprocess.run(
+                [sys.executable, str(SCRIPT), "resume", str(state)],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+            self.assertIn("Resume status: unblock", blocked.stdout)
+            self.assertIn("Next node: budget", blocked.stdout)
+            self.assertIn("Provisional AI decisions: storage", blocked.stdout)
+
+            data = json.loads(state.read_text())
+            data["nodes"] = [node for node in data["nodes"] if node["id"] != "budget"]
+            state.write_text(json.dumps(data))
+            pending = subprocess.run(
+                [sys.executable, str(SCRIPT), "resume", str(state)],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+            self.assertIn("Resume status: human-gate", pending.stdout)
+            self.assertIn("Next node: release", pending.stdout)
+
+    def test_resume_reports_complete_state(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            state = Path(directory) / "state.json"
+            self.run_cli("init", str(state), "--title", "Resume")
+            self.run_cli("add", str(state), "--id", "storage", "--question", "Storage?", "--type", "auto", "--option", "json=JSON", "--assessment", self.assessment("json"))
+
+            result = subprocess.run(
+                [sys.executable, str(SCRIPT), "resume", str(state)],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+            self.assertIn("Resume status: complete", result.stdout)
+            self.assertIn("Next node: none", result.stdout)
 
     def test_render_finds_template_in_an_installed_skill_layout(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

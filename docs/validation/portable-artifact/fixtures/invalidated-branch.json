@@ -1,0 +1,48 @@
+{
+  "version": 2,
+  "title": "Invalidated branch",
+  "nodes": [
+    {
+      "id": "audience",
+      "question": "Who is the primary audience?",
+      "context": "Audience determines downstream delivery choices.",
+      "type": "human",
+      "options": [{"id": "teams", "label": "Engineering teams", "assessment": {"triage": "recommended", "reason": "The workflow targets shared engineering decisions.", "confidence": 0.9, "reversible": true, "effort": "low", "risk": "low", "impact": "Focuses downstream choices.", "preferredWhen": "Teams hand plans between agents."}}],
+      "choice": "teams",
+      "reason": "Team handoff is the selected use case.",
+      "confidence": 0.9,
+      "reversible": true,
+      "dependsOn": [],
+      "status": "confirmed",
+      "actor": "human"
+    },
+    {
+      "id": "storage",
+      "question": "Where should state live?",
+      "context": "Storage depends on the ownership model.",
+      "type": "review",
+      "options": [{"id": "json", "label": "Workspace JSON", "assessment": {"triage": "recommended", "reason": "It matched the earlier audience choice.", "confidence": 0.9, "reversible": true, "effort": "low", "risk": "low", "impact": "Keeps state local.", "preferredWhen": "One workspace owns the plan.", "status": "invalidated"}}],
+      "choice": null,
+      "reason": "Earlier dependency changed; reassessment required.",
+      "confidence": null,
+      "reversible": true,
+      "dependsOn": ["audience"],
+      "status": "invalidated",
+      "actor": null
+    },
+    {
+      "id": "surface",
+      "question": "Where should the tree render?",
+      "context": "The surface depends on the storage choice.",
+      "type": "review",
+      "options": [{"id": "inline", "label": "Inline", "assessment": {"triage": "recommended", "reason": "It matched the earlier storage choice.", "confidence": 0.88, "reversible": true, "effort": "low", "risk": "low", "impact": "Keeps the tree in the task.", "preferredWhen": "The host supports inline views.", "status": "invalidated"}}],
+      "choice": null,
+      "reason": "Earlier dependency changed; reassessment required.",
+      "confidence": null,
+      "reversible": true,
+      "dependsOn": ["storage"],
+      "status": "invalidated",
+      "actor": null
+    }
+  ]
+}

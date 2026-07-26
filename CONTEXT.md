@@ -27,3 +27,9 @@ _Avoid_: Rest des Workflows
 Die persistierte JSON-Datei, aus der Entscheidungsbaum und Export erzeugt werden.
 Die Inline-Visualisierung ist keine dauerhafte Zustandsquelle.
 _Avoid_: UI-Zustand
+
+**Portables Entscheidungsartefakt**:
+Die `.grill/decisions.json`, die ein späterer Task mit installiertem Let Him
+Grill ohne ursprünglichen Chatverlauf prüfen und fortsetzen kann. HTML und
+Markdown sind abgeleitete Ansichten.
+_Avoid_: Export-Bundle, Session-Datei

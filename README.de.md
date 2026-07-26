@@ -129,6 +129,22 @@ weder Python noch eine andere Laufzeitumgebung.
 Codex zeigt vor der ersten Entscheidung `Visual mode · Python backend` oder
 `Visual mode · Native Codex fallback` an.
 
+### Entscheidungsartefakt fortsetzen
+
+`.grill/decisions.json` ist die portable Source of Truth. In einem späteren
+Task mit installiertem Let Him Grill kann der Agent diese Datei fortsetzen. Das
+Python-Backend ermittelt die nächste Aktion deterministisch und ohne den Zustand
+zu verändern:
+
+```bash
+python3 <skill-dir>/scripts/decision_state.py resume .grill/decisions.json
+```
+
+Beim Fortsetzen werden vorläufige KI-Entscheidungen gegen den aktuellen
+Projektstand geprüft, widersprochene oder ungültige Zweige neu bewertet und der
+Lauf autonom bis zum nächsten Human-Gate fortgeführt. HTML- und Markdown-Exporte
+sind abgeleitete Ansichten und werden im neuen Workspace neu erzeugt.
+
 ### Automatische Modusauswahl
 
 ```text
