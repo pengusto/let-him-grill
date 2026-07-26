@@ -28,6 +28,9 @@ All notable user-facing changes to Let Him Grill are recorded here.
 - Increased the red emphasis specifically for confidence below 70%.
 - Refreshed the before and reassessed screenshots for the current two-column
   decision interface.
+- Added copy-ready README examples for finance, software architecture, AI
+  training, game development, language training, and infrastructure security,
+  each with three representative decisions and its own screenshot.
 
 ## [0.1.1] - 2026-07-26
 

@@ -122,6 +122,66 @@ Codex chooses compact mode for short linear discussions and visual mode for
 branching or revisitable decisions. It states the selected mode once. You can
 switch modes at any time.
 
+### Example prompts
+
+#### Finance
+
+`Use $let-him-grill to choose a budgeting and reporting approach for our SaaS
+business. Stop before compliance or spending decisions.`
+
+Example decisions: financial priority, forecast cadence, and spending approvals.
+
+![Finance example with decisions about runway, forecasting, and approval controls.](docs/finance-example.png)
+
+#### Software architecture
+
+`Use $let-him-grill to decide whether this B2B product should start as a modular
+monolith or separate services. Stop at material scaling or ownership trade-offs.`
+
+Example decisions: system shape, API contracts, and delivery workflow.
+
+![Software architecture example with decisions about system shape, API contracts, and delivery.](docs/software-architecture-example.png)
+
+#### AI training
+
+`Use $let-him-grill to plan a domain-model training workflow. Stop at privacy,
+licensing, or budget gates.`
+
+Example decisions: measurable objective, evaluation-data governance, and the
+first adaptation method to test.
+
+![AI training example with decisions about objectives, evaluation data, and adaptation methods.](docs/ai-training-example.png)
+
+#### Game development
+
+`Use $let-him-grill to shape the save system and multiplayer scope for this game
+prototype. Stop where platform, networking, or player-experience goals differ.`
+
+Example decisions: core player loop, save format, and multiplayer timing.
+
+![Game development example with decisions about the player loop, saves, and multiplayer.](docs/game-development-example.png)
+
+#### Language training
+
+`Use $let-him-grill to create a twelve-week language training plan. Continue
+until motivation, certification, or professional priorities need my judgment.`
+
+Example decisions: primary learning outcome, weekly practice rhythm, and
+correction timing during speaking practice.
+
+![Language training example with decisions about goals, practice schedules, and feedback timing.](docs/language-training-example.png)
+
+#### Infrastructure and security
+
+`Use $let-him-grill to choose deployment, authentication, backups, and
+observability for this internal portal. Stop before accepting security exposure
+or recurring cost.`
+
+Example decisions: deployment target, employee authentication, and recovery
+evidence required before launch.
+
+![Infrastructure and security example with decisions about hosting, authentication, and recovery.](docs/infrastructure-security-example.png)
+
 ### Finishing the grill
 
 At shared understanding, Codex summarizes confirmed human decisions,
