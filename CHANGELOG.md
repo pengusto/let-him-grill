@@ -21,6 +21,9 @@ All notable user-facing changes to Let Him Grill are recorded here.
 
 - Reject cyclic decision dependencies before rendering, exporting, resuming, or
   changing state.
+- Send all pending answers from the interactive tree in one dependency-aware
+  Codex follow-up, show option summaries without expanding details, and explain
+  excluded or stale options as unavailable.
 
 ## [0.2.1] - 2026-07-26
 

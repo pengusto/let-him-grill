@@ -84,10 +84,13 @@ Python or another runtime without permission.
 
    `::codex-inline-vis{file="<rendered-filename>.html"}`
 
-7. When a follow-up applies an earlier persisted option, use
-   `decision_state.py choose` or the native invalidation procedure below. It
-   invalidates all transitive dependants. Re-research and rebuild only those
-   nodes; render again only in `visual`.
+7. When a follow-up applies one or more persisted options, use
+   `decision_state.py choose` or the native invalidation procedure below for
+   each choice. Apply batched human choices in node-array order. After each
+   choice, re-research and rebuild its invalidated descendants before applying
+   a later dependent choice. Apply that later choice only when fresh assessment
+   keeps it valid and selectable; otherwise stop at the first conflict and
+   explain it. Render again only in `visual`.
 8. Update domain terminology inline through `domain-modeling`. Create an ADR
    only when that skill's three ADR conditions all hold.
 9. At shared understanding, summarize confirmed human decisions, provisional AI
