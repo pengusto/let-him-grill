@@ -178,7 +178,7 @@
         const optionMain = element("div", "gwd-option-main");
         const label = element("label", "gwd-option-title", option.label);
         label.htmlFor = controlId;
-        const summary = element("span", "gwd-option-summary gwd-muted", option.description || "No additional description.");
+        const summary = element("span", "gwd-option-summary gwd-muted", option.description || assessment.reason);
         const triage = element("span", "gwd-option-triage");
         const optionDot = element("span", "gwd-option-dot");
         optionDot.setAttribute("aria-hidden", "true");

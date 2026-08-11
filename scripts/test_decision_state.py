@@ -260,6 +260,7 @@ class DecisionStateTest(unittest.TestCase):
             self.assertNotIn('let selected = null', fragment)
             self.assertNotIn('keepOnlyOnePendingDecision', fragment)
             self.assertIn('optionMain.append(label, summary, triage, pending)', fragment)
+            self.assertIn('option.description || assessment.reason', fragment)
             self.assertIn('excluded:"Excluded · unavailable"', fragment)
             self.assertIn('"Needs reassessment · unavailable"', fragment)
             self.assertIn('item.hidden = item !== target', fragment)

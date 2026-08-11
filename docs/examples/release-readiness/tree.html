@@ -24,6 +24,8 @@
     #grill-decision-tree .gwd-option { display:grid; grid-template-columns:auto minmax(0, 1fr) auto; align-items:center; gap:6px; min-width:0; }
     #grill-decision-tree .gwd-option-main { display:grid; gap:4px; min-width:0; }
     #grill-decision-tree .gwd-option-title { min-width:0; cursor:pointer; }
+    #grill-decision-tree .gwd-option-summary { line-height:1.35; }
+    #grill-decision-tree .gwd-option.gwd-unavailable .gwd-option-title { cursor:not-allowed; }
     #grill-decision-tree .gwd-option-triage { display:inline-flex; align-items:center; gap:4px; width:max-content; max-width:100%; padding:2px 6px; border-radius:999px; color:var(--foreground, #f5f5f5); background:color-mix(in srgb, var(--gwd-option-color) 18%, transparent); font-size:.875rem; white-space:nowrap; }
     #grill-decision-tree .gwd-option-dot { width:6px; height:6px; background:var(--gwd-option-color); }
     #grill-decision-tree .gwd-metrics { display:flex; gap:6px; flex-wrap:wrap; margin:8px 0; }
@@ -86,7 +88,7 @@
     <span class="gwd-muted" data-feedback aria-live="polite"></span>
     <button type="button" class="gwd-button" data-copy-prompt hidden>Copy prompt</button>
     <span data-reassess-slot></span>
-    <button type="button" class="gwd-button gwd-primary" data-apply disabled>Send to Codex</button>
+    <button type="button" class="gwd-button gwd-primary" data-apply disabled>Send all decisions to Codex</button>
   </div>
   <script>
     (() => {
@@ -99,9 +101,9 @@
       const copyPrompt = root.querySelector("[data-copy-prompt]");
       const statusLabels = { auto:"AI recommendation", review:"Review", human:"Decision required", derived:"Derived", blocked:"Blocked" };
       const statusColors = { auto:"var(--viz-series-1, #62aef7)", review:"var(--viz-series-2, #ff9a52)", human:"var(--destructive, #ff6868)", derived:"var(--muted-foreground, #a0a0a0)", blocked:"var(--destructive, #ff6868)" };
-      const triageLabels = { recommended:"Recommended", "solid-alternative":"Solid alternative", situational:"Situational", "not-recommended":"Not recommended", excluded:"Excluded" };
+      const triageLabels = { recommended:"Recommended", "solid-alternative":"Solid alternative", situational:"Situational", "not-recommended":"Not recommended", excluded:"Excluded · unavailable" };
       const triageColors = { recommended:"var(--gwd-positive-color)", "solid-alternative":"var(--gwd-info-color)", situational:"var(--gwd-warning-color)", "not-recommended":"var(--destructive, #ff6868)", excluded:"var(--muted-foreground, #a0a0a0)" };
-      let selected = null;
+      const selections = new Map();
       let fallbackPrompt = "";
 
       function element(tag, className, text) {
@@ -129,13 +131,27 @@
         if (percent >= 70) return metric(`Confidence ${percent}% · medium`, "warning", "Medium confidence: 70–89%");
         return metric(`Confidence ${percent}% · low`, "confidence-low", "Low confidence: below 70%");
       }
-      function markPending(target) {
-        root.querySelectorAll("[data-pending]").forEach((item) => item.hidden = item !== target);
+      function markPending(nodeId, target) {
+        const card = [...root.querySelectorAll("[data-node-card]")].find((item) => item.dataset.nodeCard === nodeId);
+        card?.querySelectorAll("[data-pending]").forEach((item) => item.hidden = item !== target);
+      }
+      function syncApplyState() {
+        const count = selections.size;
+        apply.disabled = count === 0;
+        apply.textContent = "Send all decisions to Codex";
+        feedback.textContent = count ? `${count} decision${count === 1 ? "" : "s"} ready` : "No pending change.";
+      }
+      function setSelection(node, selection, pending) {
+        if (selection) selections.set(node.id, selection);
+        else selections.delete(node.id);
+        markPending(node.id, pending);
+        syncApplyState();
       }
       function showSelection(node, answer) {
         copyPrompt.hidden = true;
         fallbackPrompt = "";
-        feedback.textContent = `Selected: ${node.question} → ${answer}`;
+        const count = selections.size;
+        feedback.textContent = `${count} decision${count === 1 ? "" : "s"} ready · Latest: ${node.question} → ${answer}`;
         feedback.title = feedback.textContent;
       }
       function renderOption(node, option) {
@@ -153,26 +169,33 @@
         input.setAttribute("aria-label", `Select option: ${option.label}`);
         input.disabled = excluded || invalidated;
         input.checked = option.id === node.choice;
+        if (input.disabled) {
+          row.classList.add("gwd-unavailable");
+          row.title = invalidated
+            ? "This option needs reassessment before it can be selected."
+            : "This option conflicts with a confirmed requirement and cannot be selected.";
+        }
         const optionMain = element("div", "gwd-option-main");
         const label = element("label", "gwd-option-title", option.label);
         label.htmlFor = controlId;
+        const summary = element("span", "gwd-option-summary gwd-muted", option.description || assessment.reason);
         const triage = element("span", "gwd-option-triage");
         const optionDot = element("span", "gwd-option-dot");
         optionDot.setAttribute("aria-hidden", "true");
         optionDot.style.setProperty("--gwd-option-color", invalidated ? "var(--muted-foreground, #a0a0a0)" : triageColors[assessment.triage]);
         triage.style.setProperty("--gwd-option-color", invalidated ? "var(--muted-foreground, #a0a0a0)" : triageColors[assessment.triage]);
-        triage.append(optionDot, invalidated ? "Needs reassessment" : triageLabels[assessment.triage]);
+        triage.append(optionDot, invalidated ? "Needs reassessment · unavailable" : triageLabels[assessment.triage]);
         const pending = element("span", "gwd-pending", "Pending change");
         pending.dataset.pending = "";
         pending.hidden = true;
-        optionMain.append(label, triage, pending);
+        optionMain.append(label, summary, triage, pending);
         const descriptionId = `${controlId}-description`;
         const toggle = element("button", "gwd-option-toggle");
         toggle.type = "button";
         toggle.dataset.optionToggle = "";
         toggle.setAttribute("aria-expanded", "false");
         toggle.setAttribute("aria-controls", descriptionId);
-        toggle.setAttribute("aria-label", `Show description for ${option.label}`);
+        toggle.setAttribute("aria-label", `Show assessment for ${option.label}`);
         const chevron = element("span", "gwd-chevron", "›");
         chevron.setAttribute("aria-hidden", "true");
         toggle.append(chevron);
@@ -188,7 +211,6 @@
           metric(assessment.reversible ? "Easy to reverse" : "Hard to reverse", assessment.reversible ? "positive" : "negative"),
         );
         description.append(
-          element("p", "", option.description || "No additional description."),
           element("p", "", assessment.reason),
           metrics,
           element("p", "gwd-muted", `Impact: ${assessment.impact} · Prefer when: ${assessment.preferredWhen}`),
@@ -196,10 +218,7 @@
         input.addEventListener("change", () => {
           input.closest("[data-node-card]")?.querySelector("[data-custom-answer]")?.removeAttribute("open");
           const changed = option.id !== node.choice;
-          selected = changed ? { node:node.id, option:option.id } : null;
-          apply.disabled = !selected;
-          markPending(changed ? pending : null);
-          feedback.textContent = changed ? "" : "No pending change.";
+          setSelection(node, changed ? { node:node.id, option:option.id } : null, changed ? pending : null);
           if (changed) showSelection(node, option.label);
         });
         toggle.addEventListener("click", () => {
@@ -269,19 +288,15 @@
           if (!custom.open) return;
           customChoice.checked = true;
           const answer = customInput.value.trim();
-          selected = answer ? { node:node.id, custom:answer } : null;
-          apply.disabled = !selected;
-          markPending(answer ? customPending : null);
-          feedback.textContent = answer ? "" : "Enter your own answer.";
+          setSelection(node, answer ? { node:node.id, custom:answer } : null, answer ? customPending : null);
+          if (!answer && !selections.size) feedback.textContent = "Enter your own answer.";
           if (answer) showSelection(node, answer);
         });
         customInput.addEventListener("input", () => {
           const answer = customInput.value.trim();
           customChoice.checked = true;
-          selected = answer ? { node:node.id, custom:answer } : null;
-          apply.disabled = !selected;
-          markPending(answer ? customPending : null);
-          feedback.textContent = answer ? "" : "Enter your own answer.";
+          setSelection(node, answer ? { node:node.id, custom:answer } : null, answer ? customPending : null);
+          if (!answer && !selections.size) feedback.textContent = "Enter your own answer.";
           if (answer) showSelection(node, answer);
         });
         customForm.append(customInput);
@@ -348,16 +363,19 @@
         root.querySelectorAll("[data-option-description]").forEach((description) => description.hidden = true);
       });
       apply.addEventListener("click", async () => {
-        if (!selected) return;
-        const node = state.nodes.find((item) => item.id === selected.node);
-        if (selected.custom) {
-          const prompt = `Use $let-him-grill. For decision "${node.question}" (node ${node.id}), rewrite this custom answer as a concise, well-written decision statement without changing its meaning: "${selected.custom}". Apply it to ${statePath}, assess it consistently with the existing options, reassess invalidated descendants, continue to the next human gate, and render the updated tree.`;
-          await sendToCodex(prompt, "Apply own answer", "Own answer sent to Codex.");
-          return;
-        }
-        const option = node.options.find((item) => item.id === selected.option);
-        const prompt = `Use $let-him-grill. Apply decision "${node.question}" = "${option.label}" (node ${selected.node}, option ${selected.option}) to ${statePath}, reassess invalidated descendants, continue to the next human gate, and render the updated tree.`;
-        await sendToCodex(prompt, "Apply decision", "Decision sent to Codex.");
+        if (!selections.size) return;
+        const selectedItems = state.nodes.flatMap((node) => {
+          const selection = selections.get(node.id);
+          return selection ? [{ node, selection }] : [];
+        });
+        const decisions = selectedItems.map(({ node, selection }) => {
+          if (selection.custom) return { node:node.id, question:node.question, customAnswer:selection.custom };
+          const option = node.options.find((item) => item.id === selection.option);
+          return { node:node.id, question:node.question, option:option.id, answer:option.label };
+        });
+        const prompt = `Use $let-him-grill. Apply these human decisions to ${statePath} in the listed state-node order: ${JSON.stringify(decisions)}. Rewrite customAnswer entries as concise decision statements without changing their meaning and assess them consistently with the existing options. After each decision, reassess descendants invalidated by earlier decisions. Apply a later listed decision only if fresh reassessment keeps it valid and selectable; otherwise stop at the first conflict and explain it. Continue to the next human gate and render the updated tree.`;
+        const decisionCount = `${decisions.length} decision${decisions.length === 1 ? "" : "s"}`;
+        await sendToCodex(prompt, `Apply ${decisionCount}`, `${decisionCount} sent to Codex.`);
       });
     })();
   </script>
