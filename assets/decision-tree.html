@@ -158,6 +158,12 @@
           || node.options.find((option) => option.assessment.triage === "recommended" && option.assessment.status !== "invalidated")?.label
           || "";
       }
+      function formatDecisions(decisions) {
+        return decisions.map((decision, index) => {
+          const answer = decision.customAnswer || decision.answer;
+          return `${index + 1}. Frage: ${decision.question}\n   Entscheidung: ${answer}`;
+        }).join("\n\n");
+      }
       function showSelection(node, answer) {
         copyPrompt.hidden = true;
         fallbackPrompt = "";
@@ -403,7 +409,25 @@
           const option = node.options.find((item) => item.id === selection.option);
           return { node:node.id, question:node.question, option:option.id, answer:option.label };
         });
-        const prompt = `Use $let-him-grill. ${revisionGuard} Apply these human decisions to ${statePath} in the listed state-node order: ${JSON.stringify(decisions)}. Rewrite customAnswer entries as concise decision statements without changing their meaning and assess them consistently with the existing options. After each decision, reassess descendants invalidated by earlier decisions. Apply a later listed decision only if fresh reassessment keeps it valid and selectable; otherwise stop at the first conflict and explain it. Continue to the next human gate and render the updated tree.`;
+        const decisionSummary = formatDecisions(decisions);
+        const prompt = `Use $let-him-grill.
+
+Aufgabe:
+Wende die folgenden menschlichen Entscheidungen auf den Entscheidungsstand
+${statePath} an.
+
+${revisionGuard}
+
+Menschliche Entscheidungen:
+${decisionSummary}
+
+Arbeitsregeln:
+- Halte die Reihenfolge der Entscheidungen ein.
+- Formuliere eigene Antworten als kurze, klare Entscheidungsstatements um, ohne ihre Bedeutung zu verändern.
+- Bewerte jede Antwort gegen die bestehende Evidenz und die vorhandenen Optionen.
+- Bewerte nach jeder Entscheidung die dadurch invalidierten Nachfolger neu.
+- Wende eine spätere Entscheidung nur an, wenn die frische Bewertung sie weiterhin trägt; stoppe sonst beim ersten Konflikt und erkläre ihn.
+- Fahre bis zum nächsten echten Human-Gate fort und rendere danach den aktualisierten Entscheidungsbaum.`;
         const decisionCount = `${decisions.length} decision${decisions.length === 1 ? "" : "s"}`;
         if (await sendToCodex(prompt, `Apply ${decisionCount}`, `${decisionCount} sent to Codex.`)) {
           selections.clear();
