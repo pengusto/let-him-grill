@@ -24,6 +24,12 @@ All notable user-facing changes to Let Him Grill are recorded here.
 - Send all pending answers from the interactive tree in one dependency-aware
   Codex follow-up, show option summaries without expanding details, and explain
   excluded or stale options as unavailable.
+- Seed `Own answer` from the selected or recommended option so users can refine
+  an existing answer instead of rewriting it from scratch.
+- Prevent duplicate Codex follow-ups while a send is pending, and hide the
+  custom-answer editor until invalidated decisions are reassessed.
+- Add monotonic state revisions so historical trees cannot silently apply
+  choices to a newer decision state.
 
 ## [0.2.1] - 2026-07-26
 

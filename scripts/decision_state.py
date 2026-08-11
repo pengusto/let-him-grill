@@ -32,7 +32,9 @@ def load(path: Path) -> dict:
     return state
 
 
-def save(path: Path, state: dict) -> None:
+def save(path: Path, state: dict, *, increment_revision: bool = True) -> None:
+    if increment_revision:
+        state["revision"] = state.get("revision", 0) + 1
     validate(state)
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(state, indent=2, ensure_ascii=False) + "\n")
@@ -41,6 +43,9 @@ def save(path: Path, state: dict) -> None:
 def validate(state: dict) -> None:
     if state.get("version") != STATE_VERSION or not isinstance(state.get("nodes"), list):
         raise SystemExit(f"Invalid state: expected version {STATE_VERSION} and nodes list")
+    revision = state.get("revision", 0)
+    if isinstance(revision, bool) or not isinstance(revision, int) or revision < 0:
+        raise SystemExit("Invalid state revision: expected a non-negative integer")
     ids = [node.get("id") for node in state["nodes"]]
     if any(not value for value in ids) or len(ids) != len(set(ids)):
         raise SystemExit("Invalid state: node IDs must be unique and non-empty")
@@ -140,7 +145,11 @@ def command_init(args: argparse.Namespace) -> None:
     path = Path(args.state)
     if path.exists() and not args.force:
         raise SystemExit(f"State already exists: {path}; use --force to replace")
-    save(path, {"version": STATE_VERSION, "title": args.title, "nodes": []})
+    save(
+        path,
+        {"version": STATE_VERSION, "revision": 0, "title": args.title, "nodes": []},
+        increment_revision=False,
+    )
 
 
 def command_add(args: argparse.Namespace) -> None:
@@ -216,6 +225,11 @@ def descendants(state: dict, node_id: str) -> set[str]:
 def command_choose(args: argparse.Namespace) -> None:
     path = Path(args.state)
     state = load(path)
+    revision = state.get("revision", 0)
+    if args.expected_revision is not None and args.expected_revision != revision:
+        raise SystemExit(
+            f"Stale state revision: expected {args.expected_revision}, current {revision}; render the current tree"
+        )
     node = next((item for item in state["nodes"] if item["id"] == args.node), None)
     if node is None:
         raise SystemExit(f"Unknown node: {args.node}")
@@ -399,6 +413,7 @@ def parser() -> argparse.ArgumentParser:
     choose.add_argument("node")
     choose.add_argument("option")
     choose.add_argument("--actor", choices=("human", "ai"), default="human")
+    choose.add_argument("--expected-revision", type=int)
     choose.set_defaults(function=command_choose)
 
     render = commands.add_parser("render")

@@ -92,8 +92,10 @@
   </div>
   <script>
     (() => {
-      const state = {"version": 2, "title": "Feature planning: saved filters", "nodes": [{"id": "audience", "question": "Who should receive saved filters first?", "context": "The first audience determines onboarding, defaults, and delivery scope.", "type": "review", "options": [{"id": "existing-users", "label": "Existing dashboard users", "assessment": {"triage": "recommended", "reason": "Existing usage provides the fastest feedback loop.", "confidence": 0.92, "reversible": true, "effort": "low", "risk": "low", "impact": "Keeps onboarding and migration small.", "preferredWhen": "The goal is fast validation with known users."}}, {"id": "new-users", "label": "New users", "assessment": {"triage": "solid-alternative", "reason": "A clean onboarding flow can teach the feature from the start.", "confidence": 0.82, "reversible": true, "effort": "medium", "risk": "medium", "impact": "Adds onboarding and empty-state work.", "preferredWhen": "Acquisition is more important than retention."}}], "choice": "existing-users", "reason": "Known users provide evidence with the smallest delivery surface.", "confidence": 0.92, "reversible": true, "dependsOn": [], "status": "recommended", "actor": "ai"}, {"id": "delivery", "question": "What is the smallest useful delivery slice?", "context": "The first release should test repeated filter use without building a full sharing system.", "type": "auto", "options": [{"id": "private-slice", "label": "Private save, rename, and delete", "assessment": {"triage": "recommended", "reason": "It tests the core repeat-use behavior without permissions.", "confidence": 0.95, "reversible": true, "effort": "low", "risk": "low", "impact": "Defers sharing and collaboration.", "preferredWhen": "Existing users need personal workflow speed."}}, {"id": "shared-library", "label": "Shared team library", "assessment": {"triage": "situational", "reason": "Sharing adds ownership and permission decisions too early.", "confidence": 0.88, "reversible": true, "effort": "high", "risk": "medium", "impact": "Creates collaboration and authorization scope.", "preferredWhen": "Team reuse is already proven as the primary need."}}], "choice": "private-slice", "reason": "One private vertical slice tests the feature promise safely.", "confidence": 0.95, "reversible": true, "dependsOn": ["audience"], "status": "recommended", "actor": "ai"}, {"id": "documentation", "question": "How should the first release be explained?", "context": "Users need one discoverable explanation independent of rollout scope.", "type": "auto", "options": [{"id": "inline-help", "label": "Inline help plus one README example", "assessment": {"triage": "recommended", "reason": "It explains the workflow at the point of use.", "confidence": 0.93, "reversible": true, "effort": "low", "risk": "low", "impact": "Adds a small maintained example.", "preferredWhen": "The interaction is simple and self-contained."}}], "choice": "inline-help", "reason": "The smallest durable explanation is sufficient.", "confidence": 0.93, "reversible": true, "dependsOn": [], "status": "recommended", "actor": "ai"}, {"id": "scope-gate", "question": "Should shared team filters be part of the first public release?", "context": "Sharing changes permissions, ownership, migration, and the public product promise.", "type": "human", "options": [{"id": "private-first", "label": "Release private filters first", "assessment": {"triage": "recommended", "reason": "It validates repeat use before adding collaboration.", "confidence": 0.9, "reversible": true, "effort": "low", "risk": "low", "impact": "Team sharing remains a follow-up.", "preferredWhen": "Fast evidence matters more than breadth."}}, {"id": "include-sharing", "label": "Include team sharing", "assessment": {"triage": "solid-alternative", "reason": "It delivers broader value but creates permission scope.", "confidence": 0.78, "reversible": false, "effort": "high", "risk": "medium", "impact": "Adds ownership, roles, and migration obligations.", "preferredWhen": "Team collaboration is a committed launch requirement."}}], "choice": null, "reason": null, "confidence": null, "reversible": false, "dependsOn": ["audience", "delivery"], "status": "pending", "actor": null}]};
+      const state = {"version": 2, "revision": 0, "title": "Feature planning: saved filters", "nodes": [{"id": "audience", "question": "Who should receive saved filters first?", "context": "The first audience determines onboarding, defaults, and delivery scope.", "type": "review", "options": [{"id": "existing-users", "label": "Existing dashboard users", "assessment": {"triage": "recommended", "reason": "Existing usage provides the fastest feedback loop.", "confidence": 0.92, "reversible": true, "effort": "low", "risk": "low", "impact": "Keeps onboarding and migration small.", "preferredWhen": "The goal is fast validation with known users."}}, {"id": "new-users", "label": "New users", "assessment": {"triage": "solid-alternative", "reason": "A clean onboarding flow can teach the feature from the start.", "confidence": 0.82, "reversible": true, "effort": "medium", "risk": "medium", "impact": "Adds onboarding and empty-state work.", "preferredWhen": "Acquisition is more important than retention."}}], "choice": "existing-users", "reason": "Known users provide evidence with the smallest delivery surface.", "confidence": 0.92, "reversible": true, "dependsOn": [], "status": "recommended", "actor": "ai"}, {"id": "delivery", "question": "What is the smallest useful delivery slice?", "context": "The first release should test repeated filter use without building a full sharing system.", "type": "auto", "options": [{"id": "private-slice", "label": "Private save, rename, and delete", "assessment": {"triage": "recommended", "reason": "It tests the core repeat-use behavior without permissions.", "confidence": 0.95, "reversible": true, "effort": "low", "risk": "low", "impact": "Defers sharing and collaboration.", "preferredWhen": "Existing users need personal workflow speed."}}, {"id": "shared-library", "label": "Shared team library", "assessment": {"triage": "situational", "reason": "Sharing adds ownership and permission decisions too early.", "confidence": 0.88, "reversible": true, "effort": "high", "risk": "medium", "impact": "Creates collaboration and authorization scope.", "preferredWhen": "Team reuse is already proven as the primary need."}}], "choice": "private-slice", "reason": "One private vertical slice tests the feature promise safely.", "confidence": 0.95, "reversible": true, "dependsOn": ["audience"], "status": "recommended", "actor": "ai"}, {"id": "documentation", "question": "How should the first release be explained?", "context": "Users need one discoverable explanation independent of rollout scope.", "type": "auto", "options": [{"id": "inline-help", "label": "Inline help plus one README example", "assessment": {"triage": "recommended", "reason": "It explains the workflow at the point of use.", "confidence": 0.93, "reversible": true, "effort": "low", "risk": "low", "impact": "Adds a small maintained example.", "preferredWhen": "The interaction is simple and self-contained."}}], "choice": "inline-help", "reason": "The smallest durable explanation is sufficient.", "confidence": 0.93, "reversible": true, "dependsOn": [], "status": "recommended", "actor": "ai"}, {"id": "scope-gate", "question": "Should shared team filters be part of the first public release?", "context": "Sharing changes permissions, ownership, migration, and the public product promise.", "type": "human", "options": [{"id": "private-first", "label": "Release private filters first", "assessment": {"triage": "recommended", "reason": "It validates repeat use before adding collaboration.", "confidence": 0.9, "reversible": true, "effort": "low", "risk": "low", "impact": "Team sharing remains a follow-up.", "preferredWhen": "Fast evidence matters more than breadth."}}, {"id": "include-sharing", "label": "Include team sharing", "assessment": {"triage": "solid-alternative", "reason": "It delivers broader value but creates permission scope.", "confidence": 0.78, "reversible": false, "effort": "high", "risk": "medium", "impact": "Adds ownership, roles, and migration obligations.", "preferredWhen": "Team collaboration is a committed launch requirement."}}], "choice": null, "reason": null, "confidence": null, "reversible": false, "dependsOn": ["audience", "delivery"], "status": "pending", "actor": null}]};
       const statePath = "docs/examples/feature-planning/decisions.json";
+      const expectedRevision = state.revision ?? 0;
+      const revisionGuard = `Expected state revision: ${expectedRevision}. Before any write, read the current state revision; missing revision means 0. If the current revision differs, do not apply these decisions. Render the current tree and ask the user to review it.`;
       const root = document.getElementById("grill-decision-tree");
       const tree = root.querySelector("[data-tree]");
       const apply = root.querySelector("[data-apply]");
@@ -104,6 +106,7 @@
       const triageLabels = { recommended:"Recommended", "solid-alternative":"Solid alternative", situational:"Situational", "not-recommended":"Not recommended", excluded:"Excluded · unavailable" };
       const triageColors = { recommended:"var(--gwd-positive-color)", "solid-alternative":"var(--gwd-info-color)", situational:"var(--gwd-warning-color)", "not-recommended":"var(--destructive, #ff6868)", excluded:"var(--muted-foreground, #a0a0a0)" };
       const selections = new Map();
+      let sending = false;
       let fallbackPrompt = "";
 
       function element(tag, className, text) {
@@ -137,7 +140,7 @@
       }
       function syncApplyState() {
         const count = selections.size;
-        apply.disabled = count === 0;
+        apply.disabled = sending || count === 0;
         apply.textContent = "Send all decisions to Codex";
         feedback.textContent = count ? `${count} decision${count === 1 ? "" : "s"} ready` : "No pending change.";
       }
@@ -146,6 +149,14 @@
         else selections.delete(node.id);
         markPending(node.id, pending);
         syncApplyState();
+      }
+      function editableAnswerSeed(node) {
+        const card = [...root.querySelectorAll("[data-node-card]")].find((item) => item.dataset.nodeCard === node.id);
+        const checkedOption = card?.querySelector("[data-option]:checked")?.dataset.option;
+        const selectedOption = selections.get(node.id)?.option || checkedOption || node.choice;
+        return node.options.find((option) => option.id === selectedOption)?.label
+          || node.options.find((option) => option.assessment.triage === "recommended" && option.assessment.status !== "invalidated")?.label
+          || "";
       }
       function showSelection(node, answer) {
         copyPrompt.hidden = true;
@@ -282,10 +293,11 @@
         const customForm = element("div", "gwd-custom-form");
         const customInput = element("textarea");
         customInput.rows = 3;
-        customInput.placeholder = "Describe your preferred answer…";
+        customInput.placeholder = "Edit the selected or recommended answer…";
         customInput.setAttribute("aria-label", `Own answer for: ${node.question}`);
         custom.addEventListener("toggle", () => {
           if (!custom.open) return;
+          if (!customInput.value.trim()) customInput.value = editableAnswerSeed(node);
           customChoice.checked = true;
           const answer = customInput.value.trim();
           setSelection(node, answer ? { node:node.id, custom:answer } : null, answer ? customPending : null);
@@ -301,27 +313,45 @@
         });
         customForm.append(customInput);
         custom.append(customSummary, customForm);
-        content.append(heading, options, custom);
+        const customOrNotice = node.status === "invalidated"
+          ? element("p", "gwd-muted", "Reassess path before editing this answer.")
+          : custom;
+        content.append(heading, options, customOrNotice);
         card.append(marker, content);
         return card;
       }
       async function sendToCodex(prompt, title, successMessage) {
+        if (sending) return false;
+        sending = true;
+        apply.disabled = true;
+        root.querySelectorAll("[data-reassess]").forEach((button) => button.disabled = true);
         copyPrompt.hidden = true;
         fallbackPrompt = "";
+        feedback.textContent = "Sending to Codex…";
         if (window.openai?.sendFollowUpMessage) {
           try {
             const result = await window.openai.sendFollowUpMessage({ prompt, title });
             if (result?.isError) throw new Error("Codex rejected the follow-up message.");
             feedback.textContent = successMessage;
+            return true;
           } catch {
             fallbackPrompt = prompt;
             copyPrompt.hidden = false;
             feedback.textContent = "Codex connection failed.";
+            return false;
+          } finally {
+            sending = false;
+            root.querySelectorAll("[data-reassess]").forEach((button) => button.disabled = false);
+            apply.disabled = selections.size === 0;
           }
         } else {
           fallbackPrompt = prompt;
           copyPrompt.hidden = false;
           feedback.textContent = "Codex connection failed.";
+          sending = false;
+          root.querySelectorAll("[data-reassess]").forEach((button) => button.disabled = false);
+          apply.disabled = selections.size === 0;
+          return false;
         }
       }
 
@@ -347,8 +377,8 @@
         reassess.type = "button";
         reassess.dataset.reassess = firstInvalidated.id;
         reassess.addEventListener("click", async () => {
-          const prompt = `Use $let-him-grill. Reassess invalidated decision node ${firstInvalidated.id} and its invalidated descendants in ${statePath}, continue to the next human gate, and render the updated tree.`;
-          await sendToCodex(prompt, "Reassess path", "Reassessment sent to Codex.");
+          const prompt = `Use $let-him-grill. ${revisionGuard} Reassess invalidated decision node ${firstInvalidated.id} and its invalidated descendants in ${statePath}, continue to the next human gate, and render the updated tree.`;
+          if (await sendToCodex(prompt, "Reassess path", "Reassessment sent to Codex.")) reassess.disabled = true;
         });
         root.querySelector("[data-reassess-slot]").append(reassess);
       }
@@ -363,7 +393,7 @@
         root.querySelectorAll("[data-option-description]").forEach((description) => description.hidden = true);
       });
       apply.addEventListener("click", async () => {
-        if (!selections.size) return;
+        if (!selections.size || sending) return;
         const selectedItems = state.nodes.flatMap((node) => {
           const selection = selections.get(node.id);
           return selection ? [{ node, selection }] : [];
@@ -373,9 +403,14 @@
           const option = node.options.find((item) => item.id === selection.option);
           return { node:node.id, question:node.question, option:option.id, answer:option.label };
         });
-        const prompt = `Use $let-him-grill. Apply these human decisions to ${statePath} in the listed state-node order: ${JSON.stringify(decisions)}. Rewrite customAnswer entries as concise decision statements without changing their meaning and assess them consistently with the existing options. After each decision, reassess descendants invalidated by earlier decisions. Apply a later listed decision only if fresh reassessment keeps it valid and selectable; otherwise stop at the first conflict and explain it. Continue to the next human gate and render the updated tree.`;
+        const prompt = `Use $let-him-grill. ${revisionGuard} Apply these human decisions to ${statePath} in the listed state-node order: ${JSON.stringify(decisions)}. Rewrite customAnswer entries as concise decision statements without changing their meaning and assess them consistently with the existing options. After each decision, reassess descendants invalidated by earlier decisions. Apply a later listed decision only if fresh reassessment keeps it valid and selectable; otherwise stop at the first conflict and explain it. Continue to the next human gate and render the updated tree.`;
         const decisionCount = `${decisions.length} decision${decisions.length === 1 ? "" : "s"}`;
-        await sendToCodex(prompt, `Apply ${decisionCount}`, `${decisionCount} sent to Codex.`);
+        if (await sendToCodex(prompt, `Apply ${decisionCount}`, `${decisionCount} sent to Codex.`)) {
+          selections.clear();
+          root.querySelectorAll("[data-pending]").forEach((item) => item.hidden = true);
+          syncApplyState();
+          feedback.textContent = `${decisionCount} sent to Codex.`;
+        }
       });
     })();
   </script>

@@ -10,6 +10,11 @@ Rendered HTML and exported Markdown are derived views. They may contain an
 absolute path from the workspace that created them and must not be used as
 mutable state. Regenerate them after moving the JSON artifact.
 
+State may include a non-negative `revision`; older version-2 artifacts without
+it are revision `0`. Every successful state write increments it exactly once.
+Rendered trees send their expected revision back to Codex. If the current JSON
+has a different revision, Codex changes nothing and renders the current tree.
+
 ## Resume behavior
 
 Resume is read-only until the agent has inspected current repository evidence.
@@ -34,6 +39,7 @@ autonomously until the next Human-Gate.
 
 - Never overwrite a confirmed human choice during inspection or reassessment.
 - Never select an excluded or invalidated option.
+- Never apply a historical tree when its expected revision differs from state.
 - Never treat confidence alone as permission to cross a Human-Gate.
 - Keep state version 2 until a missing capability requires a schema change.
 - The target harness must have Let Him Grill installed; workflow and safety

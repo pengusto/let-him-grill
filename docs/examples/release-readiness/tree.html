@@ -92,8 +92,10 @@
   </div>
   <script>
     (() => {
-      const state = {"version": 2, "title": "Release readiness: account export", "nodes": [{"id": "rollout", "question": "How should account export reach users?", "context": "The feature handles personal data and needs observable production evidence.", "type": "review", "options": [{"id": "staged", "label": "Staged rollout", "assessment": {"triage": "recommended", "reason": "A small cohort limits exposure while validating real exports.", "confidence": 0.93, "reversible": true, "effort": "medium", "risk": "low", "impact": "Requires cohort control and monitoring.", "preferredWhen": "Production behavior still needs validation."}}, {"id": "direct", "label": "Direct full rollout", "assessment": {"triage": "not-recommended", "reason": "It exposes every account before production evidence exists.", "confidence": 0.91, "reversible": false, "effort": "low", "risk": "high", "impact": "Maximizes privacy and support exposure.", "preferredWhen": "Equivalent production behavior is already proven."}}], "choice": "staged", "reason": "A controlled cohort provides evidence with bounded exposure.", "confidence": 0.93, "reversible": true, "dependsOn": [], "status": "recommended", "actor": "ai"}, {"id": "rollback", "question": "What rollback control is required?", "context": "Export failures must be stopped without redeploying unrelated changes.", "type": "auto", "options": [{"id": "flag", "label": "Server-side feature flag", "assessment": {"triage": "recommended", "reason": "It disables new exports quickly while preserving evidence.", "confidence": 0.96, "reversible": true, "effort": "low", "risk": "low", "impact": "Adds one temporary rollout control.", "preferredWhen": "A staged cohort is used."}}, {"id": "redeploy", "label": "Rollback by redeploy", "assessment": {"triage": "not-recommended", "reason": "It couples export rollback to the whole release.", "confidence": 0.9, "reversible": true, "effort": "medium", "risk": "medium", "impact": "Slows incident response.", "preferredWhen": "No runtime flag mechanism exists."}}], "choice": "flag", "reason": "A targeted kill switch matches the staged rollout.", "confidence": 0.96, "reversible": true, "dependsOn": ["rollout"], "status": "recommended", "actor": "ai"}, {"id": "release-notes", "question": "How should the user-facing change be documented?", "context": "Users need to understand export contents and delivery timing.", "type": "auto", "options": [{"id": "guide", "label": "Release note plus export guide", "assessment": {"triage": "recommended", "reason": "It explains both availability and data contents.", "confidence": 0.94, "reversible": true, "effort": "low", "risk": "low", "impact": "Adds two small maintained documents.", "preferredWhen": "The feature affects user data handling."}}], "choice": "guide", "reason": "Documentation is required regardless of rollout size.", "confidence": 0.94, "reversible": true, "dependsOn": [], "status": "recommended", "actor": "ai"}, {"id": "go-live-gate", "question": "Is the current privacy and operational evidence sufficient for public rollout?", "context": "Public availability accepts residual data-exposure and support risk.", "type": "human", "options": [{"id": "limited", "label": "Approve limited cohort", "assessment": {"triage": "recommended", "reason": "It gathers evidence while preserving a bounded rollback path.", "confidence": 0.88, "reversible": true, "effort": "medium", "risk": "medium", "impact": "Requires active monitoring and cohort support.", "preferredWhen": "Security review and restore tests have passed."}}, {"id": "defer", "label": "Defer rollout", "assessment": {"triage": "solid-alternative", "reason": "It avoids exposure until remaining evidence exists.", "confidence": 0.86, "reversible": true, "effort": "low", "risk": "low", "impact": "Delays user access.", "preferredWhen": "Privacy or rollback evidence remains incomplete."}}], "choice": null, "reason": null, "confidence": null, "reversible": false, "dependsOn": ["rollout", "rollback"], "status": "pending", "actor": null}]};
+      const state = {"version": 2, "revision": 0, "title": "Release readiness: account export", "nodes": [{"id": "rollout", "question": "How should account export reach users?", "context": "The feature handles personal data and needs observable production evidence.", "type": "review", "options": [{"id": "staged", "label": "Staged rollout", "assessment": {"triage": "recommended", "reason": "A small cohort limits exposure while validating real exports.", "confidence": 0.93, "reversible": true, "effort": "medium", "risk": "low", "impact": "Requires cohort control and monitoring.", "preferredWhen": "Production behavior still needs validation."}}, {"id": "direct", "label": "Direct full rollout", "assessment": {"triage": "not-recommended", "reason": "It exposes every account before production evidence exists.", "confidence": 0.91, "reversible": false, "effort": "low", "risk": "high", "impact": "Maximizes privacy and support exposure.", "preferredWhen": "Equivalent production behavior is already proven."}}], "choice": "staged", "reason": "A controlled cohort provides evidence with bounded exposure.", "confidence": 0.93, "reversible": true, "dependsOn": [], "status": "recommended", "actor": "ai"}, {"id": "rollback", "question": "What rollback control is required?", "context": "Export failures must be stopped without redeploying unrelated changes.", "type": "auto", "options": [{"id": "flag", "label": "Server-side feature flag", "assessment": {"triage": "recommended", "reason": "It disables new exports quickly while preserving evidence.", "confidence": 0.96, "reversible": true, "effort": "low", "risk": "low", "impact": "Adds one temporary rollout control.", "preferredWhen": "A staged cohort is used."}}, {"id": "redeploy", "label": "Rollback by redeploy", "assessment": {"triage": "not-recommended", "reason": "It couples export rollback to the whole release.", "confidence": 0.9, "reversible": true, "effort": "medium", "risk": "medium", "impact": "Slows incident response.", "preferredWhen": "No runtime flag mechanism exists."}}], "choice": "flag", "reason": "A targeted kill switch matches the staged rollout.", "confidence": 0.96, "reversible": true, "dependsOn": ["rollout"], "status": "recommended", "actor": "ai"}, {"id": "release-notes", "question": "How should the user-facing change be documented?", "context": "Users need to understand export contents and delivery timing.", "type": "auto", "options": [{"id": "guide", "label": "Release note plus export guide", "assessment": {"triage": "recommended", "reason": "It explains both availability and data contents.", "confidence": 0.94, "reversible": true, "effort": "low", "risk": "low", "impact": "Adds two small maintained documents.", "preferredWhen": "The feature affects user data handling."}}], "choice": "guide", "reason": "Documentation is required regardless of rollout size.", "confidence": 0.94, "reversible": true, "dependsOn": [], "status": "recommended", "actor": "ai"}, {"id": "go-live-gate", "question": "Is the current privacy and operational evidence sufficient for public rollout?", "context": "Public availability accepts residual data-exposure and support risk.", "type": "human", "options": [{"id": "limited", "label": "Approve limited cohort", "assessment": {"triage": "recommended", "reason": "It gathers evidence while preserving a bounded rollback path.", "confidence": 0.88, "reversible": true, "effort": "medium", "risk": "medium", "impact": "Requires active monitoring and cohort support.", "preferredWhen": "Security review and restore tests have passed."}}, {"id": "defer", "label": "Defer rollout", "assessment": {"triage": "solid-alternative", "reason": "It avoids exposure until remaining evidence exists.", "confidence": 0.86, "reversible": true, "effort": "low", "risk": "low", "impact": "Delays user access.", "preferredWhen": "Privacy or rollback evidence remains incomplete."}}], "choice": null, "reason": null, "confidence": null, "reversible": false, "dependsOn": ["rollout", "rollback"], "status": "pending", "actor": null}]};
       const statePath = "docs/examples/release-readiness/decisions.json";
+      const expectedRevision = state.revision ?? 0;
+      const revisionGuard = `Expected state revision: ${expectedRevision}. Before any write, read the current state revision; missing revision means 0. If the current revision differs, do not apply these decisions. Render the current tree and ask the user to review it.`;
       const root = document.getElementById("grill-decision-tree");
       const tree = root.querySelector("[data-tree]");
       const apply = root.querySelector("[data-apply]");
@@ -104,6 +106,7 @@
       const triageLabels = { recommended:"Recommended", "solid-alternative":"Solid alternative", situational:"Situational", "not-recommended":"Not recommended", excluded:"Excluded · unavailable" };
       const triageColors = { recommended:"var(--gwd-positive-color)", "solid-alternative":"var(--gwd-info-color)", situational:"var(--gwd-warning-color)", "not-recommended":"var(--destructive, #ff6868)", excluded:"var(--muted-foreground, #a0a0a0)" };
       const selections = new Map();
+      let sending = false;
       let fallbackPrompt = "";
 
       function element(tag, className, text) {
@@ -137,7 +140,7 @@
       }
       function syncApplyState() {
         const count = selections.size;
-        apply.disabled = count === 0;
+        apply.disabled = sending || count === 0;
         apply.textContent = "Send all decisions to Codex";
         feedback.textContent = count ? `${count} decision${count === 1 ? "" : "s"} ready` : "No pending change.";
       }
@@ -146,6 +149,14 @@
         else selections.delete(node.id);
         markPending(node.id, pending);
         syncApplyState();
+      }
+      function editableAnswerSeed(node) {
+        const card = [...root.querySelectorAll("[data-node-card]")].find((item) => item.dataset.nodeCard === node.id);
+        const checkedOption = card?.querySelector("[data-option]:checked")?.dataset.option;
+        const selectedOption = selections.get(node.id)?.option || checkedOption || node.choice;
+        return node.options.find((option) => option.id === selectedOption)?.label
+          || node.options.find((option) => option.assessment.triage === "recommended" && option.assessment.status !== "invalidated")?.label
+          || "";
       }
       function showSelection(node, answer) {
         copyPrompt.hidden = true;
@@ -282,10 +293,11 @@
         const customForm = element("div", "gwd-custom-form");
         const customInput = element("textarea");
         customInput.rows = 3;
-        customInput.placeholder = "Describe your preferred answer…";
+        customInput.placeholder = "Edit the selected or recommended answer…";
         customInput.setAttribute("aria-label", `Own answer for: ${node.question}`);
         custom.addEventListener("toggle", () => {
           if (!custom.open) return;
+          if (!customInput.value.trim()) customInput.value = editableAnswerSeed(node);
           customChoice.checked = true;
           const answer = customInput.value.trim();
           setSelection(node, answer ? { node:node.id, custom:answer } : null, answer ? customPending : null);
@@ -301,27 +313,45 @@
         });
         customForm.append(customInput);
         custom.append(customSummary, customForm);
-        content.append(heading, options, custom);
+        const customOrNotice = node.status === "invalidated"
+          ? element("p", "gwd-muted", "Reassess path before editing this answer.")
+          : custom;
+        content.append(heading, options, customOrNotice);
         card.append(marker, content);
         return card;
       }
       async function sendToCodex(prompt, title, successMessage) {
+        if (sending) return false;
+        sending = true;
+        apply.disabled = true;
+        root.querySelectorAll("[data-reassess]").forEach((button) => button.disabled = true);
         copyPrompt.hidden = true;
         fallbackPrompt = "";
+        feedback.textContent = "Sending to Codex…";
         if (window.openai?.sendFollowUpMessage) {
           try {
             const result = await window.openai.sendFollowUpMessage({ prompt, title });
             if (result?.isError) throw new Error("Codex rejected the follow-up message.");
             feedback.textContent = successMessage;
+            return true;
           } catch {
             fallbackPrompt = prompt;
             copyPrompt.hidden = false;
             feedback.textContent = "Codex connection failed.";
+            return false;
+          } finally {
+            sending = false;
+            root.querySelectorAll("[data-reassess]").forEach((button) => button.disabled = false);
+            apply.disabled = selections.size === 0;
           }
         } else {
           fallbackPrompt = prompt;
           copyPrompt.hidden = false;
           feedback.textContent = "Codex connection failed.";
+          sending = false;
+          root.querySelectorAll("[data-reassess]").forEach((button) => button.disabled = false);
+          apply.disabled = selections.size === 0;
+          return false;
         }
       }
 
@@ -347,8 +377,8 @@
         reassess.type = "button";
         reassess.dataset.reassess = firstInvalidated.id;
         reassess.addEventListener("click", async () => {
-          const prompt = `Use $let-him-grill. Reassess invalidated decision node ${firstInvalidated.id} and its invalidated descendants in ${statePath}, continue to the next human gate, and render the updated tree.`;
-          await sendToCodex(prompt, "Reassess path", "Reassessment sent to Codex.");
+          const prompt = `Use $let-him-grill. ${revisionGuard} Reassess invalidated decision node ${firstInvalidated.id} and its invalidated descendants in ${statePath}, continue to the next human gate, and render the updated tree.`;
+          if (await sendToCodex(prompt, "Reassess path", "Reassessment sent to Codex.")) reassess.disabled = true;
         });
         root.querySelector("[data-reassess-slot]").append(reassess);
       }
@@ -363,7 +393,7 @@
         root.querySelectorAll("[data-option-description]").forEach((description) => description.hidden = true);
       });
       apply.addEventListener("click", async () => {
-        if (!selections.size) return;
+        if (!selections.size || sending) return;
         const selectedItems = state.nodes.flatMap((node) => {
           const selection = selections.get(node.id);
           return selection ? [{ node, selection }] : [];
@@ -373,9 +403,14 @@
           const option = node.options.find((item) => item.id === selection.option);
           return { node:node.id, question:node.question, option:option.id, answer:option.label };
         });
-        const prompt = `Use $let-him-grill. Apply these human decisions to ${statePath} in the listed state-node order: ${JSON.stringify(decisions)}. Rewrite customAnswer entries as concise decision statements without changing their meaning and assess them consistently with the existing options. After each decision, reassess descendants invalidated by earlier decisions. Apply a later listed decision only if fresh reassessment keeps it valid and selectable; otherwise stop at the first conflict and explain it. Continue to the next human gate and render the updated tree.`;
+        const prompt = `Use $let-him-grill. ${revisionGuard} Apply these human decisions to ${statePath} in the listed state-node order: ${JSON.stringify(decisions)}. Rewrite customAnswer entries as concise decision statements without changing their meaning and assess them consistently with the existing options. After each decision, reassess descendants invalidated by earlier decisions. Apply a later listed decision only if fresh reassessment keeps it valid and selectable; otherwise stop at the first conflict and explain it. Continue to the next human gate and render the updated tree.`;
         const decisionCount = `${decisions.length} decision${decisions.length === 1 ? "" : "s"}`;
-        await sendToCodex(prompt, `Apply ${decisionCount}`, `${decisionCount} sent to Codex.`);
+        if (await sendToCodex(prompt, `Apply ${decisionCount}`, `${decisionCount} sent to Codex.`)) {
+          selections.clear();
+          root.querySelectorAll("[data-pending]").forEach((item) => item.hidden = true);
+          syncApplyState();
+          feedback.textContent = `${decisionCount} sent to Codex.`;
+        }
       });
     })();
   </script>

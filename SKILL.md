@@ -86,11 +86,16 @@ Python or another runtime without permission.
 
 7. When a follow-up applies one or more persisted options, use
    `decision_state.py choose` or the native invalidation procedure below for
-   each choice. Apply batched human choices in node-array order. After each
-   choice, re-research and rebuild its invalidated descendants before applying
-   a later dependent choice. Apply that later choice only when fresh assessment
-   keeps it valid and selectable; otherwise stop at the first conflict and
-   explain it. Render again only in `visual`.
+   each choice. Every visual follow-up includes `expectedRevision`; re-read the
+   complete state before writing and compare it with the current `revision`.
+   A missing `revision` means `0`. If they differ, change nothing and render the
+   current tree for review. With the Python backend, pass `--expected-revision`
+   to the first `choose` command. Apply batched human choices in node-array
+   order. After each choice, re-research and rebuild its invalidated descendants
+   before applying a later dependent choice. Apply that later choice only when
+   fresh assessment keeps it valid and selectable; otherwise stop at the first
+   conflict and explain it. For every successful state write, increment
+   `revision` exactly once. Render again only in `visual`.
 8. Update domain terminology inline through `domain-modeling`. Create an ADR
    only when that skill's three ADR conditions all hold.
 9. At shared understanding, summarize confirmed human decisions, provisional AI
@@ -164,7 +169,7 @@ invalidated node with refreshed options or reasoning.
 Do not call `python3`, Node.js, a shell renderer, or another runtime. Use Codex
 file tools for all operations:
 
-1. Create version 2 state as `{"version":2,"title":"...","nodes":[]}`. Use only
+1. Create version 2 state as `{"version":2,"revision":0,"title":"...","nodes":[]}`. Use only
    these exact schema values; never invent synonyms:
    - `type`: `auto`, `review`, `human`, `derived`, or `blocked`
    - `status`: `recommended`, `confirmed`, `pending`, `derived`, or `invalidated`
@@ -172,10 +177,13 @@ file tools for all operations:
    - option assessment `status`: absent, or `invalidated`
    - node `context`: absent, or a non-empty string explaining why the question matters
 2. Before every write, read the complete current state and validate those exact
-   value sets, unique node IDs, known dependencies, valid option IDs, one
-   assessment per option, and no selected `excluded` or invalidated option. Use
+   value sets, a non-negative integer `revision` where missing means `0`, unique
+   node IDs, known dependencies, valid option IDs, one assessment per option,
+   and no selected `excluded` or invalidated option. Use
    `examples/decisions.json` as the schema example. Stop instead of writing when
-   any field uses an unknown value.
+   any field uses an unknown value. When a visual follow-up supplies
+   `expectedRevision`, stop without writing and render the current tree if it
+   differs from the current revision.
 3. For resume, inspect state without changing it and select exactly one next
    action using this priority:
    - the first invalidated node that has no invalidated dependency: `reassess`
@@ -192,7 +200,8 @@ file tools for all operations:
    `dependsOn`. Set every descendant's `choice` and `actor` to `null`, status to
    `invalidated`, reason to `Earlier dependency changed; reassessment required.`,
    confidence to `null`, and every option assessment status to `invalidated`.
-6. Apply the complete JSON update in one file edit. Never partially update state.
+6. Apply the complete JSON update in one file edit and increment `revision`
+   exactly once. Never partially update state.
 7. Read `<skill-dir>/assets/decision-tree.html` completely. It is the canonical
    visual source; never recreate or restyle its HTML, CSS, or JavaScript.
 8. Serialize the complete validated state as JSON and escape every `<` as

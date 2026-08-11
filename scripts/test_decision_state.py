@@ -111,6 +111,43 @@ class DecisionStateTest(unittest.TestCase):
             self.assertNotEqual(result.returncode, 0)
             self.assertIn("excluded", result.stderr)
 
+    def test_revision_guard_rejects_a_stale_tree(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            state = Path(directory) / "state.json"
+            self.run_cli("init", str(state), "--title", "Revision")
+            self.run_cli(
+                "add", str(state), "--id", "storage", "--question", "Storage?",
+                "--type", "review", "--option", "json=JSON", "--option", "sqlite=SQLite",
+                "--assessment", self.assessment("json"),
+                "--assessment", self.assessment("sqlite", "solid-alternative"),
+                "--choice", "json",
+            )
+            self.assertEqual(json.loads(state.read_text())["revision"], 1)
+
+            rendered = Path(directory) / "tree.html"
+            self.run_cli("render", str(state), str(rendered))
+            self.assertIn('"revision": 1', rendered.read_text())
+            self.assertIn("const expectedRevision = state.revision ?? 0", rendered.read_text())
+
+            self.run_cli(
+                "add", str(state), "--id", "release", "--question", "Release?",
+                "--type", "human", "--option", "now=Now", "--option", "later=Later",
+                "--assessment", self.assessment("now"),
+                "--assessment", self.assessment("later", "solid-alternative"),
+            )
+            self.assertEqual(json.loads(state.read_text())["revision"], 2)
+            result = subprocess.run(
+                [
+                    sys.executable, str(SCRIPT), "choose", str(state), "storage", "sqlite",
+                    "--expected-revision", "1",
+                ],
+                capture_output=True,
+                text=True,
+            )
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("Stale state revision", result.stderr)
+            self.assertEqual(json.loads(state.read_text())["nodes"][0]["choice"], "json")
+
     def test_rejects_native_schema_synonyms(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             state = Path(directory) / "state.json"
@@ -237,11 +274,20 @@ class DecisionStateTest(unittest.TestCase):
             self.assertIn('customChoice.checked = true', fragment)
             self.assertIn('querySelector("[data-custom-answer]")?.removeAttribute("open")', fragment)
             self.assertIn('const selections = new Map()', fragment)
+            self.assertIn('let sending = false', fragment)
+            self.assertIn('if (sending) return false', fragment)
+            self.assertIn('apply.disabled = sending || count === 0', fragment)
+            self.assertIn('selections.clear()', fragment)
             self.assertIn('selections.set(node.id, selection)', fragment)
             self.assertIn('const selectedItems = state.nodes.flatMap', fragment)
             self.assertIn('JSON.stringify(decisions)', fragment)
             self.assertIn('Rewrite customAnswer entries as concise decision statements', fragment)
             self.assertIn('customInput.setAttribute("aria-label", `Own answer for: ${node.question}`)', fragment)
+            self.assertIn('function editableAnswerSeed(node)', fragment)
+            self.assertIn('querySelector("[data-option]:checked")', fragment)
+            self.assertIn('option.assessment.triage === "recommended"', fragment)
+            self.assertIn('if (!customInput.value.trim()) customInput.value = editableAnswerSeed(node)', fragment)
+            self.assertIn('Edit the selected or recommended answer…', fragment)
             self.assertIn('data-apply disabled>Send all decisions to Codex</button>', fragment)
             self.assertIn('apply.textContent = "Send all decisions to Codex"', fragment)
             self.assertIn('.gwd-disclosure:hover .gwd-chevron', fragment)
@@ -263,6 +309,10 @@ class DecisionStateTest(unittest.TestCase):
             self.assertIn('option.description || assessment.reason', fragment)
             self.assertIn('excluded:"Excluded · unavailable"', fragment)
             self.assertIn('"Needs reassessment · unavailable"', fragment)
+            self.assertIn('Reassess path before editing this answer.', fragment)
+            self.assertIn('const expectedRevision = state.revision ?? 0', fragment)
+            self.assertIn('Expected state revision: ${expectedRevision}', fragment)
+            self.assertIn('If the current revision differs, do not apply these decisions', fragment)
             self.assertIn('item.hidden = item !== target', fragment)
             self.assertIn('grid-template-columns:repeat(2, minmax(0, 1fr))', fragment)
             self.assertNotIn('@media (max-width:760px)', fragment)
@@ -328,8 +378,11 @@ class DecisionStateTest(unittest.TestCase):
         self.assertIn("Do not implement the discussed plan", skill)
         self.assertIn("creating a duplicate", skill)
         self.assertIn("decision_state.py resume", skill)
+        self.assertIn("expectedRevision", skill)
+        self.assertIn("missing `revision` means `0`", skill)
+        self.assertRegex(skill, r"increment\s+`revision` exactly once")
         self.assertIn("one or more persisted options", skill)
-        self.assertIn("Apply batched human choices in node-array order", skill)
+        self.assertRegex(skill, r"Apply batched human choices in node-array\s+order")
         self.assertIn("the first invalidated node that has no invalidated dependency", skill)
         self.assertIn("otherwise the first non-invalidated `blocked` node", skill)
         self.assertIn("otherwise the first `pending` node", skill)
