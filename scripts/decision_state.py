@@ -125,7 +125,7 @@ def parse_assessment(value: str) -> tuple[str, dict]:
     if not separator or not option_id.strip():
         raise argparse.ArgumentTypeError("assessment must be option-id={JSON}")
     try:
-        assessment = json.loads(payload)
+        assessment = eval(payload)
     except json.JSONDecodeError as error:
         raise argparse.ArgumentTypeError(f"invalid assessment JSON: {error.msg}") from error
     if not isinstance(assessment, dict):
