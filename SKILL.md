@@ -84,6 +84,13 @@ Python or another runtime without permission.
 
    `::codex-inline-vis{file="<rendered-filename>.html"}`
 
+   When the user wants to brainstorm before choosing, keep that detour in the
+   conversation. Do not persist, revise, or render during the detour. Once the
+   discussion produces concrete options, constraints, or trade-offs that could
+   change the pending node, offer once to return to the tree. Continue
+   brainstorming if the user declines. Only after the user agrees, update the
+   state once and render one fresh tree.
+
 7. When a follow-up applies one or more persisted options, use
    `decision_state.py choose` or the native invalidation procedure below for
    each choice. Every visual follow-up includes `expectedRevision`; re-read the
@@ -229,5 +236,5 @@ file tools for all operations:
 - Replace invalidated nodes with fresh option assessments; do not reuse stale
   option triage.
 - Keep reasons factual and short. Record uncertainty explicitly.
-- In `visual`, render a new visualization after every persisted change; old
-  responses remain historical snapshots.
+- In `visual`, render after persisted decision changes, not after brainstorming
+  messages; old responses remain historical snapshots.

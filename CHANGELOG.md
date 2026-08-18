@@ -17,6 +17,11 @@ All notable user-facing changes to Let Him Grill are recorded here.
   software architecture, and release readiness, each with portable state,
   interactive tree, handoff, and reassessment guidance.
 
+### Changed
+
+- Keep brainstorming at a human gate in the conversation and render a fresh
+  tree only after the user accepts the agent's suggestion to return to it.
+
 ### Fixed
 
 - Reject cyclic decision dependencies before rendering, exporting, resuming, or
