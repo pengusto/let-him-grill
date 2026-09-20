@@ -78,6 +78,8 @@ setup or documentation blockers.
 
 ## 6. Launch
 
+- [ ] Complete the focused distribution and feedback workflow from
+      [ticket 011](tickets/011-launch-distribution.md).
 - [ ] Share the finished project with Matt Pocock and keep the inspiration link
       prominent.
 - [ ] Publish one short problem → demo → install post.

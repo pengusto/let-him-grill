@@ -2,3 +2,5 @@
 .grill/
 __pycache__/
 *.pyc
+.gstack/
+docs/screenshot.png
