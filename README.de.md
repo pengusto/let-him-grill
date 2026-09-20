@@ -2,23 +2,28 @@
 
 [English](README.md) · **Deutsch**
 
-Eine autonome, evidenzbasierte Erweiterung des Grill-with-Docs-Workflows für
-Codex. Sie löst sichere, umkehrbare Entscheidungen selbstständig und stoppt,
-wenn menschliches Urteilsvermögen das Ergebnis wesentlich beeinflusst.
+**Stoppe das Babysitten von Codex. Lass es umkehrbare Entscheidungen lösen und
+dich unterbrechen, wenn dein Urteil das Ergebnis verändert.**
 
-<p align="center">
-  <img src="docs/molebyte-builder.gif" width="320" alt="Molebyte prüft, baut und vollendet in einer Pixel-Art-Animation einen leuchtenden Entscheidungsbaum.">
-</p>
-
-<p align="center"><strong>Molebyte baut die umkehrbaren Zweige. Die wichtigen Entscheidungen bleiben bei dir.</strong></p>
+Coding-Agenten stoppen oft für Entscheidungen, die sie sicher selbst treffen
+könnten. Let Him Grill untersucht Repository und Dokumentation, empfiehlt und
+löst risikoarme, umkehrbare Optionen, hält den Entscheidungspfad fest und
+stoppt bei Architektur-, Produkt-, Sicherheits-, Kosten- und anderen
+wesentlichen Human-Gates.
 
 ## Demo
 
-![Let Him Grill löst umkehrbare Entscheidungen, stoppt an einem menschlichen Entscheidungspunkt und bewertet einen abhängigen Zweig neu, nachdem sich eine frühere Auswahl geändert hat.](docs/demo.png)
+![Let Him Grill löst fünf umkehrbare Entscheidungen, stoppt an einem Human-Gate und hält den aktuellen Pfad nach der Neubewertung bereit.](docs/demo-poster.png)
 
-Sechs Entscheidungen bewertet · fünf autonom gelöst · ein menschlicher
-Entscheidungspunkt. Das [Posterbild](docs/demo-poster.png) dient als statische
-Alternative.
+Sechs Entscheidungen bewertet · fünf autonom gelöst · ein Human-Gate. Vergleiche
+den [Ausgangszustand](docs/demo.png) mit dem [Poster nach der Neubewertung](docs/demo-poster.png)
+lies die [dokumentierte Neubewertung eines Zweigs](docs/examples/feature-planning/reassessment.md)
+oder öffne ein [vollständiges portables Entscheidungsartefakt](docs/examples/README.md).
+
+Das ist keine pauschale `continue autonomously`-Anweisung. Let Him Grill legt
+eine Entscheidungsgrenze fest, hält die portable Source of Truth in
+`.grill/decisions.json` und erklärt abhängige Zweige ungültig, wenn sich eine
+frühere Auswahl ändert.
 
 ## Installation
 
@@ -35,7 +40,22 @@ In fünf skriptgesteuerten paarweisen Planungsdurchläufen sank die mediane Zeit
 bis zu einem nutzbaren Plan von 455 auf 54 Sekunden. Die finalen Pläne von Let
 Him Grill zeigten sieben normalisierte wesentliche menschliche
 Entscheidungspunkte und stellten eine unmittelbar zu beantwortende Frage. Siehe
-[Protokoll, Rohtranskripte und Einschränkungen](docs/benchmark/RESULTS.md).
+[Protokoll, Rohtranskripte und Einschränkungen](docs/benchmark/RESULTS.md). Die
+Zeitmessung enthält Codex-Ausführung und Benchmark-Controller-Latenz; sie ist
+Produktnachweis, kein kontrollierter Modell-Performance-Benchmark.
+
+Die [Clean-Install-Validierung](docs/validation/cross-agent-install/README.md)
+dokumentiert Codex-Erkennung und Resume-Verhalten sowie die Claude-
+Paketinstallation; ein echter Claude-Aufruf bleibt unbestätigt.
+
+## Warum nicht einfach „continue autonomously“ sagen?
+
+Diese Anweisung sagt dem Agenten, weiterzumachen, aber nicht, wann er stoppen
+oder wie er nach einer geänderten früheren Auswahl fortfahren soll. Let Him
+Grill macht die Grenzen explizit: Entscheidungen werden klassifiziert,
+risikoarme umkehrbare Optionen automatisch gelöst, echte Human-Gates bleiben
+beim Menschen und der portable Zustand kann in einem späteren Task fortgesetzt
+werden.
 
 ## Funktionsweise
 
@@ -251,6 +271,11 @@ doppelte Plandatei erstellt.
 - Python 3 empfohlen für deterministische visuelle Statusaktualisierungen
 - keine virtuelle Umgebung, kein `pip install`, kein Server und kein
   Netzwerkdienst
+
+Let Him Grill erweitert die Begleit-Skills `grilling` und `domain-modeling`; sie
+werden weder mitgeliefert noch verändert. Die Clean-Install-Nachweise prüfen
+Erkennung und portablen Zustand dieses Repositorys, nicht jede Live-Kombination
+aus Begleit-Skills und Host-Runtime.
 
 Der Kompaktmodus funktioniert ohne Python. Der native visuelle Fallback wendet
 über die Codex-Dateiwerkzeuge dieselben Status- und Invalidierungsregeln an,

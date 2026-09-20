@@ -12,9 +12,10 @@ and ownership evidence, then stops before accepting distributed operations.
 Expected path: modular monolith → PostgreSQL → ADR → Human-Gate on separate
 service operations.
 
-Resume in a task with Let Him Grill installed:
+After downloading `decisions.json` into your project as `.grill/decisions.json`,
+resume it in a task with Let Him Grill installed:
 
 ```text
-Use $let-him-grill in compact mode. Resume
-docs/examples/software-architecture/decisions.json and continue to the next Human-Gate.
+Use $let-him-grill in compact mode. Resume .grill/decisions.json and continue
+to the next Human-Gate.
 ```

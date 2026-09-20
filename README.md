@@ -2,22 +2,27 @@
 
 **English** · [Deutsch](README.de.md)
 
-An autonomous, evidence-first extension of the Grill with Docs workflow for
-Codex. It resolves safe, reversible decisions on its own and stops when human
-judgment materially changes the outcome.
+**Stop babysitting Codex. Let it resolve reversible decisions and interrupt you
+when your judgment matters.**
 
-<p align="center">
-  <img src="docs/molebyte-builder.gif" width="320" alt="Molebyte studies, builds, and completes a glowing decision tree in a pixel-art animation.">
-</p>
-
-<p align="center"><strong>Molebyte builds the reversible branches. You keep the calls that matter.</strong></p>
+Coding agents routinely stop for choices they can safely make themselves. Let
+Him Grill researches the repository, recommends and resolves low-risk,
+reversible options, records the decision path, and stops at architecture,
+product, security, cost, and other material human gates.
 
 ## Demo
 
-![Let Him Grill resolves reversible choices, stops at a human gate, then invalidates and reassesses a dependent branch after an earlier choice changes.](docs/demo.png)
+![Let Him Grill resolves five reversible choices, stops at a human gate, and keeps the current path ready after reassessment.](docs/demo-poster.png)
 
-Six decisions evaluated · five resolved autonomously · one human gate. The
-[poster frame](docs/demo-poster.png) provides a static alternative.
+Six decisions evaluated · five resolved autonomously · one human gate. Compare
+the [initial state](docs/demo.png) with the [post-reassessment poster](docs/demo-poster.png),
+read the [recorded branch reassessment](docs/examples/feature-planning/reassessment.md),
+or inspect a [complete portable decision artifact](docs/examples/README.md).
+
+This is not a blanket `continue autonomously` instruction. Let Him Grill
+defines a decision boundary, keeps the portable source of truth in
+`.grill/decisions.json`, and invalidates dependent branches when an earlier
+choice changes.
 
 ## Install
 
@@ -32,7 +37,21 @@ Start a new Codex task after installation, then invoke `$let-him-grill`.
 In five scripted paired planning runs, median time to a usable plan fell from
 455 to 54 seconds. Let Him Grill's final plans surfaced seven normalized
 material human gates while asking one immediate question. See the
-[protocol, raw transcripts, and limitations](docs/benchmark/RESULTS.md).
+[protocol, raw transcripts, and limitations](docs/benchmark/RESULTS.md). The
+timing includes Codex execution and benchmark-controller latency; it is product
+evidence, not a controlled model-performance benchmark.
+
+The [clean-install validation](docs/validation/cross-agent-install/README.md)
+records Codex discovery and resume behavior plus Claude package installation;
+live Claude invocation remains unverified.
+
+## Why not just say “continue autonomously”?
+
+That instruction tells an agent to keep going, but not where to stop or how to
+recover when an earlier choice changes. Let Him Grill makes those boundaries
+explicit: it classifies decisions, resolves only low-risk reversible options,
+stops at genuine Human-Gates, and can resume the portable state in a later
+task.
 
 ## How it works
 
@@ -232,6 +251,11 @@ requested. It does not create a duplicate plan file by default.
 - Git only for the manual installation fallback
 - Python 3 recommended for deterministic visual state updates
 - no virtual environment, `pip install`, server, or network service
+
+Let Him Grill extends the companion `grilling` and `domain-modeling` skills; it
+does not vendor or modify them. The clean-install evidence verifies this
+repository's discovery and portable-state path, not every live combination of
+companion skills and host runtime.
 
 Compact mode works without Python. The native visual fallback applies the same
 state and invalidation rules through Codex file tools, but does not have the

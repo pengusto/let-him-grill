@@ -5,8 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Let Him Grill resolves reversible planning decisions autonomously and stops only when human judgment matters.">
   <meta property="og:title" content="Let Him Grill">
-  <meta property="og:description" content="Let the agent cook. Grill only what matters.">
-  <meta property="og:image" content="social-preview.png">
+  <meta property="og:description" content="Stop babysitting Codex. Let it resolve reversible decisions and interrupt you when your judgment matters.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://pengusto.github.io/let-him-grill/">
+  <meta property="og:image" content="https://pengusto.github.io/let-him-grill/social-preview.png">
+  <meta property="og:image:alt" content="Let Him Grill routes safe decisions to an orange human gate.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Let Him Grill — Autonomous decisions for Codex">
+  <meta name="twitter:description" content="Stop babysitting Codex. Resolve reversible decisions and keep the calls that matter.">
+  <meta name="twitter:image" content="https://pengusto.github.io/let-him-grill/social-preview.png">
+  <link rel="canonical" href="https://pengusto.github.io/let-him-grill/">
   <meta name="theme-color" content="#090a0b">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23090a0b'/%3E%3Cpath d='M8 7h16v4H8zm2 6h12l-2 12h-8z' fill='%23ff9d2e'/%3E%3C/svg%3E">
   <title>Let Him Grill — Autonomous decisions for Codex</title>
@@ -119,6 +127,15 @@
       font-family: system-ui, sans-serif;
       font-size: clamp(1.05rem, 2vw, 1.3rem);
     }
+
+    .hero-note {
+      max-width: 650px;
+      margin: -12px 0 28px;
+      color: var(--ash);
+      font-size: .82rem;
+    }
+
+    .hero-note a { color: var(--paper); }
 
     .install {
       display: flex;
@@ -256,6 +273,15 @@
 
     .proof span { color: var(--ash); font-size: .78rem; }
 
+    .proof-note {
+      margin: -34px auto 0;
+      color: var(--ash);
+      font-size: .72rem;
+      text-align: center;
+    }
+
+    .proof-note a { color: var(--paper); }
+
     .section { padding: 92px 0; border-bottom: 1px solid var(--iron-2); }
 
     .builder-bay {
@@ -329,6 +355,9 @@
     }
 
     .demo-frame img { display: block; width: 100%; height: auto; }
+
+    .demo-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+    .demo-pair figcaption { padding: 12px 16px; color: var(--ash); font-size: .72rem; }
 
     .steps {
       display: grid;
@@ -448,6 +477,7 @@
       .proof, .steps, .examples, .artifact-links { grid-template-columns: 1fr; }
       .proof article + article { border-left: 0; border-top: 1px solid var(--iron-2); }
       .section-heading, .builder-bay, .final-cta { grid-template-columns: 1fr; }
+      .demo-pair { grid-template-columns: 1fr; }
       .section { padding: 68px 0; }
       .builder-copy { order: -1; }
       .install { display: block; }
@@ -480,9 +510,10 @@
   <main id="top">
     <section class="hero shell">
       <div>
-        <p class="eyebrow">Autonomous decision workflow for Codex</p>
-        <h1>Let the agent <span>cook.</span></h1>
+        <p class="eyebrow">Decision boundary for Codex</p>
+        <h1>Stop babysitting <span>Codex.</span></h1>
         <p class="lede">Let Him Grill resolves safe, reversible planning decisions on its own—and stops when your judgment actually changes the outcome.</p>
+        <p class="hero-note">Not a blanket “continue autonomously” instruction: it records the path, pauses at material Human-Gates, and reassesses dependent branches when earlier choices change. <a href="examples/feature-planning/tree.html">Open a portable decision tree.</a></p>
         <div class="install" aria-label="Installation command">
           <code id="install-command">npx skills add pengusto/let-him-grill -g -a codex -y</code>
           <button type="button" data-copy="install-command">Copy</button>
@@ -540,6 +571,7 @@
       <article><strong>455 → 54s</strong><span>median time to a usable plan</span></article>
       <article><strong>0 services</strong><span>local state, standard library, native fallback</span></article>
     </section>
+    <p class="proof-note shell">Five-run paired protocol; timing includes Codex and controller latency. <a href="https://github.com/pengusto/let-him-grill/blob/main/docs/benchmark/RESULTS.md">Read the raw runs and limitations.</a></p>
 
     <section class="section shell builder-bay" aria-labelledby="builder-title">
       <div class="builder-visual">
@@ -556,10 +588,17 @@
     <section class="section shell" id="demo">
       <div class="section-heading">
         <h2>See the grill.</h2>
-        <p>Six decisions evaluated. Five resolved autonomously. One human gate. Change an earlier choice and only its dependent path gets reassessed.</p>
+        <p>Six decisions evaluated. Five resolved autonomously. One human gate. Change an earlier choice and only its dependent path gets reassessed. <a href="examples/feature-planning/reassessment.md">Read the recorded branch reassessment.</a> <a href="examples/README.md">Open a portable artifact.</a></p>
       </div>
-      <div class="demo-frame">
-        <img src="demo.png" alt="Let Him Grill evaluates decisions, pauses at a human gate, then invalidates and reassesses a dependent branch." width="1184" height="600">
+      <div class="demo-pair">
+        <figure class="demo-frame">
+          <img src="demo.png" alt="Before autonomous resolution: six decisions are waiting as human gates." width="1184" height="600">
+          <figcaption>Before · six decisions waiting</figcaption>
+        </figure>
+        <figure class="demo-frame">
+          <img src="demo-poster.png" alt="After autonomous resolution: five decisions are resolved and one human gate remains." width="1184" height="600">
+          <figcaption>After reassessment · five autonomous decisions, one Human-Gate</figcaption>
+        </figure>
       </div>
     </section>
 

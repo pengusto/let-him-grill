@@ -1,8 +1,10 @@
 # Reference decision artifacts
 
 Each bundle is a complete, portable Let Him Grill state at a genuine Human-Gate.
-Download `decisions.json`, install Let Him Grill, and resume it in a new agent
-task. The HTML tree and Markdown handoff are derived views.
+The links below are repository-relative: clone the repository to use the sample
+commands unchanged, or download a JSON file into your project as
+`.grill/decisions.json` and resume that local path. The HTML tree and Markdown
+handoff are derived views.
 
 | Scenario | Decision tree | Portable state | Handoff |
 | --- | --- | --- | --- |

@@ -52,6 +52,30 @@ single smoke-test observation, not a performance claim.
 
 Result: **Pass**.
 
+## Public command recheck
+
+On 14 August 2026, the shorter command documented in the README was run from a
+fresh temporary `HOME`:
+
+```bash
+npx skills add pengusto/let-him-grill -g -a codex -y
+```
+
+The CLI detected Codex, copied the skill to `~/.agents/skills/let-him-grill`,
+and completed without manual edits. Running the installed script against the
+portable fixture produced the expected result:
+
+```text
+Resume status: human-gate
+Confirmed human decisions: none
+Provisional AI decisions: storage=json
+Next node: release
+Question: Should this become the public release baseline?
+```
+
+This rechecks the public installation and packaged resume path; the archived
+clean-room task above remains the live Codex discovery record.
+
 ## Claude Code
 
 Environment: official temporary npm package, Claude Code `2.1.220`.
