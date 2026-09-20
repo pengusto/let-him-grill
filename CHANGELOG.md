@@ -9,6 +9,8 @@ All notable user-facing changes to Let Him Grill are recorded here.
 - Added Molebyte as the project mascot across the GitHub Pages builder section,
   final call to action, and both README language versions, including a compact
   pixel-art workflow animation.
+- Added ready human-gate batches so independent gates are rendered and answered
+  together instead of causing one visual follow-up per gate.
 - Added a read-only `resume` command and matching native-backend contract for
   deterministically continuing portable decision state in a later agent task.
 - Added repository-relative state references for public rendered decision-tree
@@ -24,6 +26,13 @@ All notable user-facing changes to Let Him Grill are recorded here.
 
 ### Fixed
 
+- Reserve "Grill with Docs" (including the common "Grill with Dogs" speech
+  transcription) for the user-led `grilling` workflow, while "Let Him Grill"
+  now selects only the autonomous human-gate workflow.
+- Stabilize the decision-tree background while scrolling by isolating the
+  render surface and containing overscroll.
+- Make the full option text and assessment summary clickable when selecting a
+  decision, instead of requiring a precise click on the radio control.
 - Reject cyclic decision dependencies before rendering, exporting, resuming, or
   changing state.
 - Send all pending answers from the interactive tree in one dependency-aware

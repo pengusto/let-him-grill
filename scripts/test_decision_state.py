@@ -293,6 +293,10 @@ class DecisionStateTest(unittest.TestCase):
             self.assertIn('Edit the selected or recommended answer…', fragment)
             self.assertIn('data-apply disabled>Send all decisions to Codex</button>', fragment)
             self.assertIn('apply.textContent = "Send all decisions to Codex"', fragment)
+            self.assertIn('function readyHumanGateIds(nodes)', fragment)
+            self.assertIn('const humanGateIds = readyHumanGateIds(state.nodes)', fragment)
+            self.assertIn('This gate becomes available after the earlier ready gates are answered.', fragment)
+            self.assertIn('Answer the earlier ready gates first.', fragment)
             self.assertIn('.gwd-disclosure:hover .gwd-chevron', fragment)
             self.assertNotIn('.gwd-disclosure:hover {', fragment)
             self.assertIn('High confidence: 90–100%', fragment)
@@ -308,7 +312,11 @@ class DecisionStateTest(unittest.TestCase):
             self.assertIn('`${count} decision${count === 1 ? "" : "s"} ready`', fragment)
             self.assertNotIn('let selected = null', fragment)
             self.assertNotIn('keepOnlyOnePendingDecision', fragment)
+            self.assertIn('const optionMain = element("label", "gwd-option-main")', fragment)
             self.assertIn('optionMain.append(label, summary, triage, pending)', fragment)
+            self.assertIn('background-color:var(--background, #151515)', fragment)
+            self.assertIn('isolation:isolate', fragment)
+            self.assertIn('overscroll-behavior:contain', fragment)
             self.assertIn('option.description || assessment.reason', fragment)
             self.assertIn('excluded:"Excluded · unavailable"', fragment)
             self.assertIn('"Needs reassessment · unavailable"', fragment)
@@ -348,6 +356,7 @@ class DecisionStateTest(unittest.TestCase):
             fragment = rendered.read_text()
 
             self.assertIn('data-template="let-him-grill-v1"', fragment)
+            self.assertIn('<meta charset="utf-8">', fragment)
             self.assertIn('${autonomous} autonomous', fragment)
             self.assertIn('if (node.status === "confirmed") return "Confirmed"', fragment)
             self.assertIn(r"Canonical \u003ctemplate>", fragment)
@@ -386,6 +395,8 @@ class DecisionStateTest(unittest.TestCase):
         self.assertRegex(skill, r"increment\s+`revision` exactly once")
         self.assertIn("one or more persisted options", skill)
         self.assertRegex(skill, r"Apply batched human choices in node-array\s+order")
+        self.assertIn("ready human-gate batch", skill)
+        self.assertIn("do not render or ask again between its independent gates", skill)
         self.assertIn("Do not persist, revise, or render during the detour", skill)
         self.assertIn("offer once to return to the tree", skill)
         self.assertIn("Only after the user agrees", skill)
@@ -447,6 +458,70 @@ class DecisionStateTest(unittest.TestCase):
             )
             self.assertIn("Resume status: human-gate", pending.stdout)
             self.assertIn("Next node: release", pending.stdout)
+
+    def test_resume_reports_only_the_ready_human_gate_batch(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            state = Path(directory) / "state.json"
+            self.run_cli("init", str(state), "--title", "Batch")
+            self.run_cli(
+                "add", str(state), "--id", "audience", "--question", "Audience?",
+                "--type", "human", "--option", "teams=Teams", "--option", "users=Users",
+                "--assessment", self.assessment("teams"),
+                "--assessment", self.assessment("users", "solid-alternative"),
+            )
+            self.run_cli(
+                "add", str(state), "--id", "provider", "--question", "Provider?",
+                "--type", "human", "--option", "local=Local", "--option", "cloud=Cloud",
+                "--assessment", self.assessment("local"),
+                "--assessment", self.assessment("cloud", "solid-alternative"),
+            )
+            self.run_cli(
+                "add", str(state), "--id", "architecture", "--question", "Architecture?",
+                "--type", "human", "--option", "skill=Skill", "--option", "plugin=Plugin",
+                "--assessment", self.assessment("skill"),
+                "--assessment", self.assessment("plugin", "solid-alternative"),
+                "--depends-on", "audience",
+            )
+
+            result = subprocess.run(
+                [sys.executable, str(SCRIPT), "resume", str(state)],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+
+            self.assertIn("Resume status: human-gate", result.stdout)
+            self.assertIn("Next node: audience", result.stdout)
+            self.assertIn("Human-gate batch: audience, provider", result.stdout)
+            self.assertNotIn("architecture", result.stdout)
+
+    def test_resume_stops_batch_before_pending_non_human_work(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            state = Path(directory) / "state.json"
+            self.run_cli("init", str(state), "--title", "Batch boundary")
+            self.run_cli(
+                "add", str(state), "--id", "first", "--question", "First?",
+                "--type", "human", "--option", "yes=Yes", "--assessment", self.assessment("yes"),
+            )
+            self.run_cli(
+                "add", str(state), "--id", "follow-up", "--question", "Follow-up?",
+                "--type", "review", "--option", "yes=Yes", "--assessment", self.assessment("yes"),
+            )
+            self.run_cli(
+                "add", str(state), "--id", "last", "--question", "Last?",
+                "--type", "human", "--option", "yes=Yes", "--assessment", self.assessment("yes"),
+            )
+
+            result = subprocess.run(
+                [sys.executable, str(SCRIPT), "resume", str(state)],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+
+            self.assertNotIn("Human-gate batch:", result.stdout)
+            self.assertIn("Next node: first", result.stdout)
+            self.assertNotIn("last", result.stdout)
 
     def test_resume_reports_complete_state(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

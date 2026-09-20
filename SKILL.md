@@ -1,9 +1,23 @@
 ---
 name: let-him-grill
-description: Stress-test a plan or design with project evidence, triage decisions and their options, automatically resolve reversible low-risk choices, and pause at genuine human decision gates. Supports compact text-first and visual persistent-tree modes. Use when the user invokes interactive or autonomous Grill with Docs, wants fewer step-by-step interruptions, asks to explore branches until human judgment is required, or wants to revisit earlier recommendations.
+description: >-
+  Autonomously resolve low-risk reversible planning decisions with project
+  evidence and stop at genuine human gates. Use only for `$let-him-grill`, "Let
+  Him Grill", or an explicit request for autonomous or batched decisions until
+  human judgment is required. Do not use for "Grill with Docs", "Grill with
+  Dogs", or generic "grill me" requests; those belong to `grilling`.
 ---
 
 # Let Him Grill
+
+## Routing boundary
+
+- `$let-him-grill` and "Let Him Grill" select this autonomous workflow.
+- `$grilling`, "Grill with Docs", "Grill with Dogs", and generic requests to
+  grill the user select `grilling`, not this skill.
+- "With Docs" is not a mode of this skill. Never reinterpret one skill name as
+  the other. If both are explicitly requested without a clear choice, ask which
+  workflow the user wants before starting.
 
 Extend `grilling` and `domain-modeling`; do not modify them. Preserve their
 evidence-first behavior and documentation rules while batching decisions that do
@@ -72,15 +86,19 @@ Python or another runtime without permission.
    Use `human` when similarly strong options carry a meaningful trade-off.
 5. Continue across `auto`, `review`, and `derived` nodes until reaching `human`,
    `blocked`, or shared understanding. For `auto`, allow the script to choose
-   only when exactly one `recommended` option is low-risk and reversible. In
-   `visual`, add each decision with
-   `decision_state.py add` with the Python backend or update the state directly
-   with the native backend.
-6. In `compact`, present the human gate as concise text. In `visual`, render the
-   state into the exact visualization directory assigned to the current Codex
-   task with `decision_state.py render`. Never reuse a visualization directory
-   from another task or infer it from an earlier artifact. Confirm the rendered
-   file exists in the current task's directory, then embed it using:
+   only when exactly one `recommended` option is low-risk and reversible. When
+   the first pending node is `human`, look ahead and materialize a batch of
+   ready human gates: keep node-array order, include only pending `human` nodes
+   whose dependencies are resolved, and stop at the first pending non-human
+   node or a human node that depends on another open gate. In `visual`, add
+   each decision with `decision_state.py add` with the Python backend or update
+   the state directly with the native backend.
+6. In `compact`, present the ready human-gate batch as concise text. In
+   `visual`, render the state once per batch into the exact visualization
+   directory assigned to the current Codex task with `decision_state.py
+   render`. Never reuse a visualization directory from another task or infer it
+   from an earlier artifact. Confirm the rendered file exists in the current
+   task's directory, then embed it using:
 
    `::codex-inline-vis{file="<rendered-filename>.html"}`
 
@@ -196,11 +214,13 @@ file tools for all operations:
    - the first invalidated node that has no invalidated dependency: `reassess`
    - otherwise the first non-invalidated `blocked` node: `unblock`
    - otherwise the first `pending` node: `human-gate` for `human`, otherwise
-     `assess`
+     `assess`; for `human-gate`, report the ready human-gate batch in
+     node-array order
    - otherwise: `complete`
    Preserve node-array order when multiple nodes have the same priority. Report
    confirmed human choices (`confirmed` plus actor `human`) and provisional AI
-   choices (`recommended` plus actor `ai`) with the selected action.
+   choices (`recommended` plus actor `ai`) with the selected action. A batch is
+   one action: do not render or ask again between its independent gates.
 4. For an `auto` node, select only when exactly one option is `recommended`,
    low-risk, and reversible. Otherwise promote the node to a human gate.
 5. When a choice changes, compute the full transitive descendant set from

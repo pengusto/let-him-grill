@@ -265,6 +265,36 @@ def option_label(node: dict, choice: str | None = None) -> str:
     )
 
 
+def human_gate_batch(state: dict) -> list[dict]:
+    nodes = state["nodes"]
+    by_id = {node["id"]: node for node in nodes}
+    first_pending = next(
+        (index for index, node in enumerate(nodes) if node["status"] == "pending"),
+        None,
+    )
+    if first_pending is None or nodes[first_pending]["type"] != "human":
+        return []
+
+    batch: list[dict] = []
+    batch_ids: set[str] = set()
+    resolved_statuses = {"recommended", "confirmed", "derived"}
+    for node in nodes[first_pending:]:
+        if node["status"] != "pending":
+            continue
+        if node["type"] != "human":
+            break
+        if any(
+            dependency in batch_ids
+            or by_id[dependency]["status"] not in resolved_statuses
+            or by_id[dependency].get("choice") is None
+            for dependency in node.get("dependsOn", [])
+        ):
+            break
+        batch.append(node)
+        batch_ids.add(node["id"])
+    return batch
+
+
 def resume_status(state: dict) -> dict:
     invalidated_ids = {
         node["id"] for node in state["nodes"] if node["status"] == "invalidated"
@@ -299,6 +329,8 @@ def resume_status(state: dict) -> dict:
         if next_node:
             action = "human-gate" if next_node["type"] == "human" else "assess"
 
+    gate_batch = human_gate_batch(state) if action == "human-gate" else []
+
     confirmed = [
         f"{node['id']}={node['choice']}"
         for node in state["nodes"]
@@ -314,6 +346,7 @@ def resume_status(state: dict) -> dict:
         "status": action or "complete",
         "node": next_node and next_node["id"],
         "question": next_node and next_node["question"],
+        "humanGateBatch": [node["id"] for node in gate_batch],
         "confirmedHumanChoices": confirmed,
         "provisionalAiChoices": provisional,
     }
@@ -336,6 +369,8 @@ def format_resume_status(summary: dict) -> str:
         )
     else:
         lines.append("Next node: none")
+    if len(summary["humanGateBatch"]) > 1:
+        lines.append(f"Human-gate batch: {', '.join(summary['humanGateBatch'])}")
     return "\n".join(lines) + "\n"
 
 

@@ -1,4 +1,4 @@
 interface:
   display_name: "Let Him Grill"
-  short_description: "Triage options and stop only at human gates"
+  short_description: "Autonomous choices until a material Human-Gate"
   default_prompt: "Use $let-him-grill in the best fitting compact or visual mode to stress-test this idea until my decision is required."

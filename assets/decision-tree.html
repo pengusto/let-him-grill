@@ -1,6 +1,7 @@
+<meta charset="utf-8">
 <div id="grill-decision-tree" data-template="let-him-grill-v1">
   <style>
-    #grill-decision-tree { --gwd-positive-color:#54d18b; --gwd-info-color:#62aef7; --gwd-warning-color:#ff9a52; display:grid; gap:16px; min-width:0; padding:16px; box-sizing:border-box; background:var(--background, #151515); color:var(--foreground, #f5f5f5); font-family:var(--font-sans, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif); }
+    #grill-decision-tree { --gwd-positive-color:#54d18b; --gwd-info-color:#62aef7; --gwd-warning-color:#ff9a52; display:grid; gap:16px; min-width:0; padding:16px; box-sizing:border-box; background-color:var(--background, #151515); isolation:isolate; overscroll-behavior:contain; color:var(--foreground, #f5f5f5); font-family:var(--font-sans, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif); }
     #grill-decision-tree .gwd-summary { display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; padding-bottom:10px; border-bottom:1px solid var(--border, #3a3a3a); }
     #grill-decision-tree .gwd-row { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
     #grill-decision-tree .gwd-muted { color:var(--muted-foreground, #a0a0a0); font-size:.875rem; }
@@ -22,10 +23,10 @@
     #grill-decision-tree .gwd-option-dot { width:7px; height:7px; border-radius:50%; background:var(--gwd-color); flex:none; }
     #grill-decision-tree .gwd-options { display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:12px 18px; margin-top:12px; }
     #grill-decision-tree .gwd-option { display:grid; grid-template-columns:auto minmax(0, 1fr) auto; align-items:center; gap:6px; min-width:0; }
-    #grill-decision-tree .gwd-option-main { display:grid; gap:4px; min-width:0; }
+    #grill-decision-tree .gwd-option-main { display:grid; gap:4px; min-width:0; cursor:pointer; }
     #grill-decision-tree .gwd-option-title { min-width:0; cursor:pointer; }
     #grill-decision-tree .gwd-option-summary { line-height:1.35; }
-    #grill-decision-tree .gwd-option.gwd-unavailable .gwd-option-title { cursor:not-allowed; }
+    #grill-decision-tree .gwd-option.gwd-unavailable .gwd-option-main { cursor:not-allowed; }
     #grill-decision-tree .gwd-option-triage { display:inline-flex; align-items:center; gap:4px; width:max-content; max-width:100%; padding:2px 6px; border-radius:999px; color:var(--foreground, #f5f5f5); background:color-mix(in srgb, var(--gwd-option-color) 18%, transparent); font-size:.875rem; white-space:nowrap; }
     #grill-decision-tree .gwd-option-dot { width:6px; height:6px; background:var(--gwd-option-color); }
     #grill-decision-tree .gwd-metrics { display:flex; gap:6px; flex-wrap:wrap; margin:8px 0; }
@@ -109,6 +110,27 @@
       let sending = false;
       let fallbackPrompt = "";
 
+      function readyHumanGateIds(nodes) {
+        if (nodes.some((node) => node.status === "invalidated" || (node.type === "blocked" && node.status !== "invalidated"))) return new Set();
+        const firstPending = nodes.findIndex((node) => node.status === "pending");
+        if (firstPending < 0 || nodes[firstPending].type !== "human") return new Set();
+        const byId = new Map(nodes.map((node) => [node.id, node]));
+        const batch = new Set();
+        const resolvedStatuses = new Set(["recommended", "confirmed", "derived"]);
+        for (const node of nodes.slice(firstPending)) {
+          if (node.status !== "pending") continue;
+          if (node.type !== "human") break;
+          if ((node.dependsOn || []).some((dependency) => {
+            const parent = byId.get(dependency);
+            return batch.has(dependency) || !parent || !resolvedStatuses.has(parent.status) || parent.choice == null;
+          })) break;
+          batch.add(node.id);
+        }
+        return batch;
+      }
+
+      const humanGateIds = readyHumanGateIds(state.nodes);
+
       function element(tag, className, text) {
         const node = document.createElement(tag);
         if (className) node.className = className;
@@ -175,6 +197,7 @@
         const assessment = option.assessment;
         const invalidated = assessment.status === "invalidated";
         const excluded = assessment.triage === "excluded";
+        const waitingForBatch = node.type === "human" && node.status === "pending" && !humanGateIds.has(node.id);
         const row = element("div", "gwd-option");
         const input = element("input");
         const controlId = `gwd-${node.id}-${option.id}`;
@@ -184,17 +207,19 @@
         input.dataset.node = node.id;
         input.dataset.option = option.id;
         input.setAttribute("aria-label", `Select option: ${option.label}`);
-        input.disabled = excluded || invalidated;
+        input.disabled = excluded || invalidated || waitingForBatch;
         input.checked = option.id === node.choice;
         if (input.disabled) {
           row.classList.add("gwd-unavailable");
           row.title = invalidated
             ? "This option needs reassessment before it can be selected."
-            : "This option conflicts with a confirmed requirement and cannot be selected.";
+            : waitingForBatch
+              ? "This gate becomes available after the earlier ready gates are answered."
+              : "This option conflicts with a confirmed requirement and cannot be selected.";
         }
-        const optionMain = element("div", "gwd-option-main");
-        const label = element("label", "gwd-option-title", option.label);
-        label.htmlFor = controlId;
+        const optionMain = element("label", "gwd-option-main");
+        optionMain.htmlFor = controlId;
+        const label = element("span", "gwd-option-title", option.label);
         const summary = element("span", "gwd-option-summary gwd-muted", option.description || assessment.reason);
         const triage = element("span", "gwd-option-triage");
         const optionDot = element("span", "gwd-option-dot");
@@ -319,9 +344,12 @@
         });
         customForm.append(customInput);
         custom.append(customSummary, customForm);
+        const waitingForBatch = node.type === "human" && node.status === "pending" && !humanGateIds.has(node.id);
         const customOrNotice = node.status === "invalidated"
           ? element("p", "gwd-muted", "Reassess path before editing this answer.")
-          : custom;
+          : waitingForBatch
+            ? element("p", "gwd-muted", "Answer the earlier ready gates first.")
+            : custom;
         content.append(heading, options, customOrNotice);
         card.append(marker, content);
         return card;
