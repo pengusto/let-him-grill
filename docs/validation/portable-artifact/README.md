@@ -27,5 +27,7 @@ state file, blocked nodes precede pending gates, confirmed human decisions are
 reported, and provisional AI choices remain visible.
 
 Native parity is defined by the identical ordered procedure in `SKILL.md` and
-checked against this table during a native-backend smoke test. Actual clean
-Codex and Claude Code task resumptions remain the scope of ticket 007.
+checked against this table during a native-backend smoke test. The
+[cross-agent installation record](../cross-agent-install/README.md) documents a
+live Codex resume and Claude package validation. Live Claude invocation remains
+unverified because authentication blocked that run.

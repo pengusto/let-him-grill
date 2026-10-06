@@ -26,6 +26,9 @@ All notable user-facing changes to Let Him Grill are recorded here.
 
 ### Fixed
 
+- Distinguish `skills` CLI reinstallation from Git-clone updates in both README
+  languages; CLI installations do not contain Git metadata.
+
 - Reserve "Grill with Docs" (including the common "Grill with Dogs" speech
   transcription) for the user-led `grilling` workflow, while "Let Him Grill"
   now selects only the autonomous human-gate workflow.

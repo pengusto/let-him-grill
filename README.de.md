@@ -285,7 +285,13 @@ Entscheidungsinhalte als Text aus.
 
 ## Aktualisierung
 
-Globale Installation:
+Bei einer globalen Installation mit der `skills`-CLI führe den Installationsbefehl erneut aus. Sichere vorher eigene Anpassungen; die erneute Installation ersetzt die installierten Skill-Dateien:
+
+```bash
+npx skills add pengusto/let-him-grill -g -a codex -y
+```
+
+Bei einer globalen Installation mit dem manuellen Git-Klon:
 
 ```bash
 git -C ~/.agents/skills/let-him-grill pull --ff-only
