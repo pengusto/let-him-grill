@@ -57,8 +57,8 @@ Python or another runtime without permission.
 
 ## Workflow
 
-1. Read relevant project docs, code, `CONTEXT.md`, and ADRs. Resolve discoverable
-   facts with tools instead of asking.
+1. Read relevant project docs, code, `GLOSSARY.md`, and ADRs.
+   Resolve discoverable facts with tools instead of asking.
 2. Select the mode and backend. In `visual`, create `.grill/decisions.json` with
    the selected backend if no active state exists. In `compact`, keep the path
    in the conversation until persistence is useful.
@@ -132,7 +132,7 @@ Python or another runtime without permission.
     or decision document when the repository already has that pattern or the
     user requested documentation. Update the existing document instead of
     creating a duplicate. Otherwise keep the implementation plan in the
-    conversation. Keep `CONTEXT.md` limited to domain terminology and create
+    conversation. Keep `GLOSSARY.md` limited to domain terminology and create
     ADRs only under the rules above.
 
 ## Human gate
