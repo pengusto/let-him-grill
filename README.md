@@ -2,13 +2,16 @@
 
 **English** · [Deutsch](README.de.md)
 
-**Stop babysitting Codex. Let it resolve reversible decisions and interrupt you
-when your judgment matters.**
+**Let the agent cook. Grill only what matters.**
 
-Coding agents routinely stop for choices they can safely make themselves. Let
-Him Grill researches the repository, recommends and resolves low-risk,
-reversible options, records the decision path, and stops at architecture,
-product, security, cost, and other material human gates.
+A Codex skill for developers and project owners who want to stress-test a plan
+without answering every reversible decision themselves. Let Him Grill researches
+the project, resolves low-risk choices, and stops when goals, architecture,
+security, or cost need your judgment. The decision path stays inspectable and
+can be resumed later.
+
+[Project site](https://pengusto.github.io/let-him-grill/) ·
+[Reference artifacts](docs/examples/README.md) · [Changelog](CHANGELOG.md)
 
 ## Demo
 
@@ -18,6 +21,9 @@ Six decisions evaluated · five resolved autonomously · one human gate. Compare
 the [initial state](docs/demo.png) with the [post-reassessment poster](docs/demo-poster.png),
 read the [recorded branch reassessment](docs/examples/feature-planning/reassessment.md),
 or inspect a [complete portable decision artifact](docs/examples/README.md).
+
+The demo and poster were rendered from the bundled interface; see the
+[recording provenance and sequence](docs/tickets/003-demo-gif.md).
 
 This is not a blanket `continue autonomously` instruction. Let Him Grill
 defines a decision boundary, keeps the portable source of truth in
@@ -30,7 +36,39 @@ choice changes.
 npx skills add pengusto/let-him-grill -g -a codex -y
 ```
 
-Start a new Codex task after installation, then invoke `$let-him-grill`.
+Requires Codex with skill support and Node.js with `npx`.
+Then open a **new Codex task** in your project and try:
+
+```text
+Use $let-him-grill in compact mode to stress-test this plan:
+Add saved filters to the existing dashboard.
+Reuse project patterns and stop when product scope needs my decision.
+```
+
+The skill checks project evidence first, explains its choices, and collects
+unresolved human gates. Before implementation, it asks you to confirm the
+planning summary. No additional server is needed.
+
+## Pick your mode
+
+| Mode | Best for | Output |
+| --- | --- | --- |
+| Compact | Short, linear planning questions | Decisions and reasons in chat; files only when useful |
+| Visual | Branching plans and later reassessment | Interactive tree and portable state in `.grill/decisions.json` |
+
+Both modes use the same decision rules. Switch at any time.
+
+## Status and limits
+
+An installable skill with published versions and recorded Codex installation
+and resume checks. This is a planning aid, not an enforcement mechanism for
+permissions: review provisional AI choices before implementation. The Python
+path provides executable state validation; the native fallback follows the same
+contract without that validation.
+
+The [validation record](docs/validation/cross-agent-install/README.md) covers
+Claude Code package installation, but not an authenticated live invocation.
+The [roadmap](docs/ROADMAP.md) tracks remaining validation and launch work.
 
 ## Before and after
 
@@ -176,6 +214,9 @@ interactive tree, Markdown handoff, and a documented branch reassessment:
 
 ### Example prompts
 
+<details>
+<summary>Six use cases with prompts and interface examples</summary>
+
 #### Finance
 
 `Use $let-him-grill to choose a budgeting and reporting approach for our SaaS
@@ -233,6 +274,8 @@ Example decisions: deployment target, employee authentication, and recovery
 evidence required before launch.
 
 ![Infrastructure and security example with decisions about hosting, authentication, and recovery.](docs/infrastructure-security-example.png)
+
+</details>
 
 ### Finishing the grill
 

@@ -2,23 +2,28 @@
 
 [English](README.md) · **Deutsch**
 
-**Stoppe das Babysitten von Codex. Lass es umkehrbare Entscheidungen lösen und
-dich unterbrechen, wenn dein Urteil das Ergebnis verändert.**
+**Lass den Agenten kochen. Grille nur, was zählt.**
 
-Coding-Agenten stoppen oft für Entscheidungen, die sie sicher selbst treffen
-könnten. Let Him Grill untersucht Repository und Dokumentation, empfiehlt und
-löst risikoarme, umkehrbare Optionen, hält den Entscheidungspfad fest und
-stoppt bei Architektur-, Produkt-, Sicherheits-, Kosten- und anderen
-wesentlichen Human-Gates.
+Ein Codex-Skill für Entwickler und Projektverantwortliche, die einen Plan
+prüfen möchten, ohne jede umkehrbare Entscheidung selbst beantworten zu müssen.
+Let Him Grill recherchiert im Projekt, trifft risikoarme Entscheidungen und
+stoppt, sobald Ziele, Architektur, Sicherheit oder Kosten dein Urteil brauchen.
+Der Entscheidungspfad bleibt nachvollziehbar und kann später fortgesetzt werden.
+
+[Projektseite](https://pengusto.github.io/let-him-grill/) ·
+[Referenzartefakte](docs/examples/README.md) · [Changelog](CHANGELOG.md)
 
 ## Demo
 
 ![Let Him Grill löst fünf umkehrbare Entscheidungen, stoppt an einem Human-Gate und hält den aktuellen Pfad nach der Neubewertung bereit.](docs/demo-poster.png)
 
 Sechs Entscheidungen bewertet · fünf autonom gelöst · ein Human-Gate. Vergleiche
-den [Ausgangszustand](docs/demo.png) mit dem [Poster nach der Neubewertung](docs/demo-poster.png)
+den [Ausgangszustand](docs/demo.png) mit dem [Poster nach der Neubewertung](docs/demo-poster.png),
 lies die [dokumentierte Neubewertung eines Zweigs](docs/examples/feature-planning/reassessment.md)
 oder öffne ein [vollständiges portables Entscheidungsartefakt](docs/examples/README.md).
+
+Die Demo und ihr Poster wurden aus der mitgelieferten Oberfläche gerendert;
+[Aufnahmeherkunft und Ablauf](docs/tickets/003-demo-gif.md) sind dokumentiert.
 
 Das ist keine pauschale `continue autonomously`-Anweisung. Let Him Grill legt
 eine Entscheidungsgrenze fest, hält die portable Source of Truth in
@@ -31,8 +36,40 @@ frühere Auswahl ändert.
 npx skills add pengusto/let-him-grill -g -a codex -y
 ```
 
-Starte nach der Installation einen neuen Codex-Task und rufe anschließend
-`$let-him-grill` auf.
+Voraussetzung: Codex mit Skill-Unterstützung und Node.js mit `npx`.
+Starte danach einen **neuen Codex-Task** in deinem Projekt und probiere:
+
+```text
+Nutze $let-him-grill im Kompaktmodus, um diesen Plan zu prüfen:
+Füge dem bestehenden Dashboard gespeicherte Filter hinzu.
+Nutze vorhandene Projektmuster und stoppe, wenn der Produktumfang meine
+Entscheidung braucht.
+```
+
+Der Skill prüft zuerst Projektbelege, begründet seine Auswahl und sammelt offene
+menschliche Entscheidungspunkte. Vor der Umsetzung lässt er dich die
+Planungszusammenfassung bestätigen. Es wird kein zusätzlicher Server benötigt.
+
+## Welcher Modus passt?
+
+| Modus | Geeignet für | Ergebnis |
+| --- | --- | --- |
+| Kompakt | Kurze, lineare Planungsfragen | Entscheidungen und Begründungen im Chat; Dateien nur bei Bedarf |
+| Visuell | Verzweigte Pläne und spätere Neubewertungen | Interaktiver Baum und portabler Zustand in `.grill/decisions.json` |
+
+Beide Modi nutzen dieselben Entscheidungsregeln. Du kannst jederzeit wechseln.
+
+## Stand und Grenzen
+
+Installierbarer Skill mit veröffentlichten Versionen und dokumentierten
+Codex-Installations- und Resume-Nachweisen. Das ist eine Planungshilfe, keine
+technische Durchsetzung von Berechtigungen: Prüfe vorläufige KI-Entscheidungen
+vor der Umsetzung. Der Python-Pfad bietet ausführbare Zustandsvalidierung;
+der native Fallback folgt demselben Vertrag ohne diese Validierung.
+
+Die [Validierung](docs/validation/cross-agent-install/README.md) belegt die
+Claude-Code-Paketinstallation, aber noch keinen authentifizierten Live-Aufruf.
+Die [Roadmap](docs/ROADMAP.md) hält verbleibende Validierungs- und Launch-Arbeit fest.
 
 ## Vorher und nachher
 
@@ -188,6 +225,9 @@ Zweigs:
 
 ### Beispiel-Prompts
 
+<details>
+<summary>Sechs Anwendungsfälle mit Prompts und Oberflächenbeispielen</summary>
+
 #### Finanzen
 
 `Nutze $let-him-grill, um einen Budgetierungs- und Berichtsansatz für unser
@@ -250,6 +290,8 @@ Beispielentscheidungen: Deployment-Ziel, Mitarbeiterauthentifizierung und vor
 dem Start erforderliche Wiederherstellungsnachweise.
 
 ![Beispiel für Infrastruktur und Sicherheit mit Entscheidungen zu Hosting, Authentifizierung und Wiederherstellung.](docs/infrastructure-security-example.png)
+
+</details>
 
 ### Abschluss des Grills
 

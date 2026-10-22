@@ -21,6 +21,8 @@ All notable user-facing changes to Let Him Grill are recorded here.
 
 ### Changed
 
+- Clarified the README audience, first-run prompt, mode selection, validation
+  limits, and demo provenance in English and German; collapsed the example gallery.
 - Keep brainstorming at a human gate in the conversation and render a fresh
   tree only after the user accepts the agent's suggestion to return to it.
 
