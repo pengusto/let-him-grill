@@ -1,4 +1,4 @@
-![KI-Illustration: Ein Pinguin ordnet Fragekarten an einer Grill-Werkbank zu einem Plan; eine Entscheidung bleibt offen.](docs/assets/let-him-grill-banner-purple.png)
+![KI-Illustration: Der Pinguin grillt Fragekarten; eine Papierbahn zeigt den Plan und eine offene menschliche Entscheidung.](docs/assets/let-him-grill-banner-ember.png)
 
 # Let Him Grill
 

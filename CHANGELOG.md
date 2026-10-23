@@ -24,6 +24,8 @@ All notable user-facing changes to Let Him Grill are recorded here.
 
 ### Changed
 
+- Selected the warm paper-and-ember penguin banner for both READMEs; kept the
+  purple original and the real workflow demos unchanged.
 - Clarified the README audience, first-run prompt, mode selection, validation
   limits, and demo provenance in English and German; collapsed the example gallery.
 - Keep brainstorming at a human gate in the conversation and render a fresh

@@ -1,4 +1,4 @@
-![AI illustration: a penguin sorts question cards into a plan at a grill workbench, leaving one decision open.](docs/assets/let-him-grill-banner-purple.png)
+![AI illustration: the penguin grills question cards; an unfurled paper plan keeps one human decision open.](docs/assets/let-him-grill-banner-ember.png)
 
 # Let Him Grill
 
