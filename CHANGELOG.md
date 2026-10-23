@@ -6,6 +6,8 @@ All notable user-facing changes to Let Him Grill are recorded here.
 
 ### Added
 
+- Added a purple penguin workshop banner to both README languages, with AI
+  provenance and the original generation prompt; retained the real workflow demos.
 - Add a landing-page sitemap and link the project to its Pengusto author identity.
 - Added Molebyte as the project mascot across the GitHub Pages builder section,
   final call to action, and both README language versions, including a compact

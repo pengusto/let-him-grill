@@ -1,3 +1,5 @@
+![KI-Illustration: Ein Pinguin ordnet Fragekarten an einer Grill-Werkbank zu einem Plan; eine Entscheidung bleibt offen.](docs/assets/let-him-grill-banner-purple.png)
+
 # Let Him Grill
 
 [English](README.md) · **Deutsch**

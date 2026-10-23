@@ -1,3 +1,5 @@
+![AI illustration: a penguin sorts question cards into a plan at a grill workbench, leaving one decision open.](docs/assets/let-him-grill-banner-purple.png)
+
 # Let Him Grill
 
 **English** · [Deutsch](README.de.md)
