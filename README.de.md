@@ -1,4 +1,8 @@
-![KI-Illustration: Der Pinguin grillt Fragekarten; eine Papierbahn zeigt den Plan und eine offene menschliche Entscheidung.](docs/assets/let-him-grill-banner-ember.png)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/let-him-grill-banner-ember-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="docs/assets/let-him-grill-banner-ember.png">
+  <img src="docs/assets/let-him-grill-banner-ember.png" alt="KI-Illustration: Der Pinguin grillt Fragekarten; eine Papierbahn zeigt den Plan und eine offene menschliche Entscheidung.">
+</picture>
 
 # Let Him Grill
 

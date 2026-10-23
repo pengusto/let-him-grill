@@ -1,4 +1,8 @@
-![AI illustration: the penguin grills question cards; an unfurled paper plan keeps one human decision open.](docs/assets/let-him-grill-banner-ember.png)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/let-him-grill-banner-ember-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="docs/assets/let-him-grill-banner-ember.png">
+  <img src="docs/assets/let-him-grill-banner-ember.png" alt="AI illustration: the penguin grills question cards; an unfurled paper plan keeps one human decision open.">
+</picture>
 
 # Let Him Grill
 

@@ -50,3 +50,33 @@ repository's MIT license.
 Local English and German previews passed at 390 px without horizontal overflow;
 the English desktop preview passed at 1440 px. The banner keeps its 3:1 ratio.
 This is local Markdown-render evidence, not a live GitHub acceptance check.
+
+## Light/Dark theme pair · 23 October 2026
+
+The owner approved this pair for both READMEs and publication. The selected
+[ember-and-paper original](let-him-grill-banner-ember.png) is reused byte-for-byte
+as the Light version. The [Dark version](let-him-grill-banner-ember-dark.png) was
+generated with OpenAI's built-in image tool using that original as its edit
+target: same penguin, grill, question cards, check path, unresolved human question
+and overall composition, with dark textured paper, ivory lettering, lavender
+edges and ember light. This is a painted material/lighting change, not a negative
+filter. The [exact edit prompt](let-him-grill-banner-ember-dark.prompt.txt) is retained.
+Existing asset-rights caveats and the MIT license remain unchanged.
+
+Both READMEs use native `picture`/`source` elements with
+`prefers-color-scheme: dark` and `light`, plus the original Light `img` fallback.
+No CSS swap, transparency or JavaScript selects the banner. Local browser checks
+verified the actual `currentSrc` in both themes and languages at 1440, 390 and
+320 px: all 12 cases preserve the 3:1 ratio without horizontal overflow. The
+320 px screenshots were visually inspected: title, penguin, checks and open
+question remain distinguishable, so a separate mobile asset is unnecessary.
+This is not a claim of live GitHub rendering acceptance.
+
+Both images are 2172 × 724 PNGs. SHA-256:
+
+- Light: `72edb369d8a9c942b64f8c0bef8f15e2b999e3283c9c4422d11372608fb35dff`
+- Dark: `c088dd79048863d34676da87260788a7ea8a4cb03a308a263bba00fc8f6448f6`
+
+The earlier purple original, the Light original and their prompts remain intact.
+The real workflow demos remain separate and unchanged. Banner generation is
+manual; no recurring AI generation or new update automation is introduced.

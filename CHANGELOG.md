@@ -24,6 +24,8 @@ All notable user-facing changes to Let Him Grill are recorded here.
 
 ### Changed
 
+- Added native Light/Dark README banner selection through `picture`/`source`,
+  retaining the light original, earlier banners, and real demos.
 - Selected the warm paper-and-ember penguin banner for both READMEs; kept the
   purple original and the real workflow demos unchanged.
 - Clarified the README audience, first-run prompt, mode selection, validation
