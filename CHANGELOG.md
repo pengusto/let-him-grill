@@ -6,6 +6,7 @@ All notable user-facing changes to Let Him Grill are recorded here.
 
 ### Added
 
+- Add a landing-page sitemap and link the project to its Pengusto author identity.
 - Added Molebyte as the project mascot across the GitHub Pages builder section,
   final call to action, and both README language versions, including a compact
   pixel-art workflow animation.
