@@ -372,3 +372,7 @@ OpenAI verbunden oder von ihnen unterstützt.
 ## Lizenz
 
 [MIT](LICENSE)
+
+## Entwicklung unterstützen
+
+Wenn dir Let Him Grill bei Projektentscheidungen hilft, kannst du [meine Open-Source-Arbeit unterstützen](https://github.com/sponsors/pengusto). Deine Unterstützung hilft bei Wartung, Validierung und Dokumentation.

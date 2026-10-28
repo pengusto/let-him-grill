@@ -342,6 +342,10 @@ The state engine uses only the Python standard library.
 See the [roadmap](docs/ROADMAP.md) for launch and follow-up work.
 User-facing changes are tracked in the [changelog](CHANGELOG.md).
 
+## Support development
+
+If Let Him Grill helps you work through project decisions, you can [support my open-source work](https://github.com/sponsors/pengusto). Your support helps me maintain the skill, improve validation, and document useful examples.
+
 ## Attribution
 
 Inspired by Matt Pocock's
